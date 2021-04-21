@@ -1,0 +1,77 @@
+image: python:3.6.9
+
+after-script: &after-script
+  - pip install pybadges
+  - >
+    if [[ BITBUCKET_EXIT_CODE -eq 0 ]]; then
+    python -m pybadges --left-text=build --right-text=passing --right-color='#34d058' > status_${BITBUCKET_REPO_SLUG}.svg ;
+    else
+    python -m pybadges --left-text=build --right-text=failing --right-color='#e05d44' > status_${BITBUCKET_REPO_SLUG}.svg ;
+    fi
+  - pipe: atlassian/bitbucket-upload-file:0.3.2
+    variables:
+      BITBUCKET_USERNAME: $BITBUCKET_USER_NAME
+      BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+      REPOSITORY: 'badges'
+      FILENAME: '*_${BITBUCKET_REPO_SLUG}.svg'
+
+test: &test
+  - definitions:
+      caches:
+        poetry: .cache/pypoetry
+  - step:
+      name: Test
+      cache:
+        - pip
+        - poetry
+      script:
+        - pip install poetry
+        - poetry config repositories.dripy ${REPOSITORY_URL}
+        - poetry install
+        - poetry run sh scripts/test.sh --cov-report=xml --junitxml=test-reports/report.xml
+        - poetry run coverage-badge -o coverage_${BITBUCKET_REPO_SLUG}.svg
+      after-script: *after-script
+      artifacts:
+        - coverage*.svg
+        - status*.svg
+
+publish: &publish
+  - step:
+      name: Publish
+      cache:
+        - pip
+      script:
+        - pip install poetry pybadges
+        - poetry config repositories.dripy ${REPOSITORY_URL}
+        - poetry build
+        - poetry publish -r dripy
+        - python -m pybadges --left-text='DriPy' --right-text="v$(poetry version -s)" --right-color='#0043AF' > version_${BITBUCKET_REPO_SLUG}.svg
+      after-script: *after-script
+      artifacts:
+        - status*.svg
+        - version*.svg
+
+docs: &docs
+  - step:
+      name: Docs
+      cache:
+        - pip
+      script:
+        - pip install mkdocs mkdocs-material
+        - mkdocs build
+        - pipe: atlassian/aws-s3-deploy:0.4.5
+          variables:
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+            AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+            S3_BUCKET: '${S3_BUCKET}/${BITBUCKET_REPO_SLUG}'
+            LOCAL_PATH: 'site'
+
+pipelines:
+  branches:
+    '{develop}':
+      - <<: *test
+    '{master}':
+      - <<: *test
+      - <<: *publish
+      - <<: *docs

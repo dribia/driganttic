@@ -1,0 +1,33 @@
+site_name: driganttic
+site_description: Ganttic API client
+strict: true
+
+theme:
+  name: material
+  custom_dir: docs/theme
+  language: en
+  favicon: img/dribia-favicon-120x120.png
+  logo: img/logo_dribia_d_blanc.png
+repo_name: dribia_team/driganttic
+repo_url: https://bitbucket.org/dribia_team/driganttic
+edit_uri: ''
+nav:
+  - driganttic: index.md
+  - Install: install.md
+  - Usage:
+    - usage/intro.md
+  - Contribute: contribute.md
+extra_css:
+- stylesheets/extra.css
+
+markdown_extensions:
+- markdown.extensions.codehilite:
+    guess_lang: false
+- toc:
+    permalink: 🔗
+- codehilite
+- admonition
+- pymdownx.details
+- pymdownx.superfences
+- pymdownx.tabbed
+
