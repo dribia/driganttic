@@ -3,6 +3,7 @@
 Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 """
 
+import datetime
 from enum import Enum
 
 from driganttic.schemas.base import Base
@@ -15,14 +16,19 @@ class ErrorMessage(str, Enum):
 
 
 class FetcherDetails(Base):
-    """Fetcher Details schema."""
+    """Fetcher Details schema.
 
-    # original_query: str
+    Warning: Timestamps are time aware!
+    """
+
+    id: str
+    fetched_timestamp: datetime.time = datetime.time()
 
 
 class FetcherList(Base):
     """Fetcher List schema."""
 
+    fetched_timestamp: datetime.time = datetime.time()
     # original_query: str
 
 
