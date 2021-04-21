@@ -51,6 +51,7 @@ class ProjectList(FetcherList):
 
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
+    # TODO: Add custom datafields (tipus?)
 
 
 class TaskDetails(FetcherDetails):
@@ -64,3 +65,4 @@ class TaskDetails(FetcherDetails):
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
+    # TODO: Add custom datafields (esperat, etc)
