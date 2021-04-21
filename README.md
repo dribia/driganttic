@@ -24,15 +24,16 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 ## Example
 
-The simplest example.
-
+The client is very trivial to use. It implement wrappers to the main types of available calls.
 ```python
 from driganttic.client import GantticClient
+import driganttic
 
 APIKEY = 'yourapikey'
 
 Client = GantticClient(APIKEY=APIKEY)
 
+print(f'Available fetchers: {driganttic.client.FETCHERS}')
 # get all projects, tasks and resources
 projects = Client.get_projects()
 tasks = Client.get_tasks(timeMin =, timeMax=)
@@ -42,7 +43,7 @@ one_project = Client.get_project_details(projectId='23932')
 one_task = Client.get_task_details(projectId='23932')
 one_resource = Client.get_resource_details(projectId='23932')
 ```
-All are pydantic models already formatted with the interesting fields.
+All results are pydantic models already formatted with the interesting fields.
 
 ## TODOs
 
