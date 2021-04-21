@@ -15,11 +15,13 @@
 
 ---
 
-Shortly describe this library.
+API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 ## Key features
 
-* Expose the key features of the library in some bullet points.
+* Client simple programmatic access to Ganttic API Rest
+* Class based with async methods
+* Pydantic responses
 
 ## Example
 
