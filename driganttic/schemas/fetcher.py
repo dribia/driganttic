@@ -5,6 +5,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 import datetime
 from enum import Enum
+from typing import List
 
 from driganttic.schemas.base import Base
 
@@ -20,16 +21,20 @@ class FetcherDetails(Base):
 
     Warning: Timestamps are time aware!
     """
-
     id: str
-    fetched_timestamp: datetime.time = datetime.time()
+    fetched_timestamp: datetime.datetime = datetime.datetime.now()
+    status: str
+    name: str
+    created: datetime.datetime
 
 
 class FetcherList(Base):
     """Fetcher List schema."""
 
-    fetched_timestamp: datetime.time = datetime.time()
-    # original_query: str
+    fetched_timestamp: datetime.datetime = datetime.datetime.now()
+    fetched_items: List[FetcherDetails]
+    pages: int
+    page: int
 
 
 class ResourceList(FetcherList):

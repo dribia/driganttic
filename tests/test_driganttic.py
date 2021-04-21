@@ -36,7 +36,6 @@ def test_GantticClient():
             val1 = Client._get_fetcher(k, timeMin = t1, timeMax= t2)
         else:
             val1 = Client._get_fetcher(k)
-        assert(resid is not None)
         print(f'Sample call {k}:\n {res}')
         assert(val1.status_code == 200)
         val2 = dri_parse.__getattribute__(name1, val1)
@@ -46,4 +45,5 @@ def test_GantticClient():
 
         # TODO: Test get detailed
         res = val1.json()
-        resid = val1['items'][0].get('id')
+        resid = res['items'][0].get('id')
+        assert(resid is not None)

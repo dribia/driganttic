@@ -6,6 +6,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 """
 
 # External modules
+import datetime
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -15,8 +16,22 @@ from driganttic.schemas.fetcher import (
     ResourceList,
     TaskDetails,
     TaskList,
+    FetcherDetails,
+    FetcherList,
 )
 
+def _fetcherDetails(response: dict) -> FetcherDetails:
+    """Parse the fetcher details"""
+    res = response.copy()
+    res['created'] = datetime.datetime(response.get('created'),'%Y-%m-%d %H:%M')
+    return FetcherDetails(**res)
+
+def _fetcherlist(response: dict) -> FetcherList:
+    """Parse the fetcher list."""
+    items = [_fetcherDetails(e) for e in response.get('items',[])]
+    pages = response.get('pageCount')
+    page = response.get('page')
+    return FetcherList(items=items, pages=pages, page=page)
 
 def _resourcelist(response: dict) -> ResourceList:
     """Parse the resource response.
