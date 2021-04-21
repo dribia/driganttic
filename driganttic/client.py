@@ -19,20 +19,26 @@ accelerate-your-requests-using-asyncio-62dafca83c33
 # import asyncio
 # import json
 # import os
+from typing import Dict
+
+import parse
+
+# Internal modules
+from driganttic.schemas.fetcher import (
+    FetcherDetails,
+    ProjectDetails,
+    ProjectList,
+    ResourceDetails,
+    ResourceList,
+    TaskDetails,
+    TaskList,
+)
 
 # import aiohttp
 # External modules
 # import requests
 # from aiohttp import ClientSession as ai_ClientSession
 
-# Internal modules
-from driganttic.schemas.fetcher import (
-    FetcherDetails,
-    FetcherList,
-    ProjectDetails,
-    ResourceDetails,
-    TaskDetails,
-)
 
 FETCHERS = {
     "resource": {
@@ -78,14 +84,12 @@ class GantticClient:
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
 
-    def _get_all(self, fetcher_name: str) -> FetcherList:
+    def _get_all(self, fetcher_name: str) -> Dict:
         """Gets list of the entire fetcher."""
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def _get_detailed(
-        self, fetcher_name: str, fetcher_detail_id: str
-    ) -> FetcherDetails:
+    def _get_detailed(self, fetcher_name: str, fetcher_detail_id: str) -> Dict:
         """Gets details of the detailed fetcher."""
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
@@ -107,13 +111,13 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def get_tasks(self) -> FetcherList:
+    def get_tasks(self) -> TaskList:
         """Gets stuff."""
-        return self._get_all("task")
+        return parse._tasklist(self._get_all("task"))
 
     def get_task_details(self, taskId: str) -> FetcherDetails:
         """Gets stuff."""
-        return self._get_detailed("task", taskId)
+        return parse._taskdetails(self._get_detailed("task", taskId))
 
     def create_task(self, TaskData: TaskDetails):
         """Creates stuff."""
@@ -127,13 +131,13 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("task", taskId)
 
-    def get_resources(self) -> FetcherList:
+    def get_resources(self) -> ResourceList:
         """Gets stuff."""
-        return self._get_all("resource")
+        return parse._resourcelist(self._get_all("resource"))
 
-    def get_resource_details(self, resourceId: str) -> FetcherDetails:
+    def get_resource_details(self, resourceId: str) -> ResourceDetails:
         """Gets stuff."""
-        return self._get_detailed("resource", resourceId)
+        return parse._resourcedetails(self._get_detailed("resource", resourceId))
 
     def create_resource(self, ResourceData: ResourceDetails):
         """Gets stuff."""
@@ -147,13 +151,13 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("resource", resourceId)
 
-    def get_projects(self) -> FetcherList:
+    def get_projects(self) -> ProjectList:
         """Gets stuff."""
-        return self._get_all("project")
+        return parse._projectlist(self._get_all("project"))
 
-    def get_project_details(self, projectId: str) -> FetcherDetails:
+    def get_project_details(self, projectId: str) -> ProjectDetails:
         """Gets stuff."""
-        return self._get_detailed("project", projectId)
+        return parse._projectdetails(self._get_detailed("project", projectId))
 
     def create_project(self, ProjectData: ProjectDetails):
         """Gets stuff."""
