@@ -19,7 +19,8 @@ accelerate-your-requests-using-asyncio-62dafca83c33
 # import asyncio
 # import json
 # import os
-from typing import Dict
+from typing import Dict, Optional
+import requests
 
 import parse
 
@@ -54,8 +55,7 @@ FETCHERS = {
 
 
 # TODO: Move defaults to config
-# TODO: Elegant way to not need to write all funcs (decorator)?
-
+# TODO: Async using aiohttp?
 
 class GantticClient:
     """Custom client for the Ganttic API."""
@@ -83,16 +83,22 @@ class GantticClient:
         self.ENDPOINT = ENDPOINT + "/" + VERSION
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
+        self.session = requests.Session()
 
-    def _get_all(self, fetcher_name: str) -> Dict:
+    def _get_fetcher(self, fetcher_name: str, fetcher_detail_id: Optional[str]) -> Dict:
         """Gets list of the entire fetcher."""
-        # TODO: USe fetchers dict
-        raise NotImplementedError("TBD")
+        fetcher_endpoint = self.FETCHERS.get(fetcher_name,{}).get('endpoint')
+        if fetcher_endpoint is None:
+            raise NotImplementedError('Fectcher not implemented')
+        if fetcher_detail_id is not None:
+            fetcher_endpoint += '/' + str(fetcher_detail_id)
+        headers = {"Accept": "application/json"}
+        auth = requests.auth.HTTPBasicAuth('apikey', self.APIKEY)
+        req_string = self.ENDPOINT + '/' + fetcher_endpoint
+        with self.session as session:
+            # TODO: Implement exception catching
+            return session.get(req_string, params = kwargs, headers = headers, auth=auth)
 
-    def _get_detailed(self, fetcher_name: str, fetcher_detail_id: str) -> Dict:
-        """Gets details of the detailed fetcher."""
-        # TODO: USe fetchers dict
-        raise NotImplementedError("TBD")
 
     def _create_detailed(self, fetcher_name: str, fetcher_details: FetcherDetails):
         """Creates detailed fetcher."""
@@ -111,13 +117,13 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def get_tasks(self) -> TaskList:
+    def get_tasks(self, **kwargs) -> TaskList:
         """Gets stuff."""
-        return parse._tasklist(self._get_all("task"))
+        return parse._tasklist(self._get_fetcher("task", **kwargs))
 
-    def get_task_details(self, taskId: str) -> FetcherDetails:
+    def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
         """Gets stuff."""
-        return parse._taskdetails(self._get_detailed("task", taskId))
+        return parse._taskdetails(self._get_fetcher("task", fetcher_detail_id = taskId, **kwargs))
 
     def create_task(self, TaskData: TaskDetails):
         """Creates stuff."""
@@ -131,13 +137,13 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("task", taskId)
 
-    def get_resources(self) -> ResourceList:
+    def get_resources(self,**kwargs) -> ResourceList:
         """Gets stuff."""
-        return parse._resourcelist(self._get_all("resource"))
+        return parse._resourcelist(self._get_fetcher("resource", **kwargs))
 
-    def get_resource_details(self, resourceId: str) -> ResourceDetails:
+    def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
         """Gets stuff."""
-        return parse._resourcedetails(self._get_detailed("resource", resourceId))
+        return parse._resourcedetails(self._get_fetcher("resource", fetcher_detail_id=resourceId, **kwargs))
 
     def create_resource(self, ResourceData: ResourceDetails):
         """Gets stuff."""
@@ -151,13 +157,13 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("resource", resourceId)
 
-    def get_projects(self) -> ProjectList:
+    def get_projects(self, **kwargs) -> ProjectList:
         """Gets stuff."""
-        return parse._projectlist(self._get_all("project"))
+        return parse._projectlist(self._get_fetcher("project", **kwargs))
 
-    def get_project_details(self, projectId: str) -> ProjectDetails:
+    def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
         """Gets stuff."""
-        return parse._projectdetails(self._get_detailed("project", projectId))
+        return parse._projectdetails(self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs))
 
     def create_project(self, ProjectData: ProjectDetails):
         """Gets stuff."""
