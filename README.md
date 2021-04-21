@@ -20,7 +20,6 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 ## Key features
 
 * Client simple programmatic access to Ganttic API Rest
-* Class based with async methods
 * Pydantic responses
 
 ## Example
