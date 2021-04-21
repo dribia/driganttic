@@ -23,7 +23,7 @@ from driganttic.schemas.fetcher import (
 def _fetcherDetails(response: dict) -> FetcherDetails:
     """Parse the fetcher details"""
     res = response.copy()
-    res['created'] = datetime.datetime(response.get('created'),'%Y-%m-%d %H:%M')
+    res['created'] = datetime.datetime.strptime(response.get('created'),'%Y-%m-%d %H:%M:%S')
     return FetcherDetails(**res)
 
 def _fetcherlist(response: dict) -> FetcherList:
@@ -31,7 +31,7 @@ def _fetcherlist(response: dict) -> FetcherList:
     items = [_fetcherDetails(e) for e in response.get('items',[])]
     pages = response.get('pageCount')
     page = response.get('page')
-    return FetcherList(items=items, pages=pages, page=page)
+    return FetcherList(fetched_items=items, pages=pages, page=page)
 
 def _resourcelist(response: dict) -> ResourceList:
     """Parse the resource response.
@@ -63,7 +63,7 @@ def _tasklist(response: dict) -> TaskList:
 
     Returns: task List Pydantic.
     """
-    raise _fetcherlist(response)
+    return _fetcherlist(response)
 
 
 def _projectdetails(response: dict) -> ProjectDetails:
@@ -97,7 +97,6 @@ def _taskdetails(response: dict) -> TaskDetails:
     Returns: Resource Details Pydantic.
     """
     res = response.copy()
-    res['start'] = datetime.datetime(response.get('start'),'%Y-%m-%d %H:%M')
-    res['end'] = datetime.datetime(response.get('end'),'%Y-%m-%d %H:%M')
-
-    raise NotImplementedError("TBD")
+    res['start'] = datetime.datetime.strptime(response.get('start'),'%Y-%m-%d')
+    res['end'] = datetime.datetime.strptime(response.get('end'),'%Y-%m-%d')
+    return TaskDetails(**res)
