@@ -36,14 +36,14 @@ def test_GantticClient():
             val1 = Client._get_fetcher(k, timeMin = t1, timeMax= t2)
         else:
             val1 = Client._get_fetcher(k)
+        res = val1.json()
         print(f'Sample call {k}:\n {res}')
         assert(val1.status_code == 200)
-        val2 = dri_parse.__getattribute__(name1, val1)
+        val2 = dri_parse.__getattribute__(name1, res)
         val3 = Client.__getattribute__(name2, k)
         assert(val2==val3)
         # TODO: Add asserts
 
         # TODO: Test get detailed
-        res = val1.json()
         resid = res['items'][0].get('id')
         assert(resid is not None)

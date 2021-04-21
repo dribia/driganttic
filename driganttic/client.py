@@ -91,7 +91,8 @@ class GantticClient:
         if fetcher_endpoint is None:
             raise NotImplementedError('Fectcher not implemented')
         if fetcher_detail_id is not None:
-            fetcher_endpoint += '/' + str(fetcher_detail_id)
+            # need to erase the final 's'
+            fetcher_endpoint = fetcher_endpoint[:-1] + '/' + str(fetcher_detail_id)
         headers = {"Accept": "application/json"}
         req_string = self.ENDPOINT + '/' + fetcher_endpoint
         kwargs['token'] = self.APIKEY

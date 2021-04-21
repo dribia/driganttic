@@ -63,7 +63,7 @@ def _tasklist(response: dict) -> TaskList:
 
     Returns: task List Pydantic.
     """
-    raise NotImplementedError("TBD")
+    raise _fetcherlist(response)
 
 
 def _projectdetails(response: dict) -> ProjectDetails:
@@ -96,4 +96,8 @@ def _taskdetails(response: dict) -> TaskDetails:
 
     Returns: Resource Details Pydantic.
     """
+    res = response.copy()
+    res['start'] = datetime.datetime(response.get('start'),'%Y-%m-%d %H:%M')
+    res['end'] = datetime.datetime(response.get('end'),'%Y-%m-%d %H:%M')
+
     raise NotImplementedError("TBD")

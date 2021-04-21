@@ -55,6 +55,11 @@ class ResourceDetails(FetcherDetails):
 
 class TaskDetails(FetcherDetails):
     """Task List schema."""
+    projectId: str
+    resources: List[str]
+    start: datetime.datetime
+    end: datetime.datetime
+    utilizationPercent: int
 
 
 class ProjectDetails(FetcherDetails):
