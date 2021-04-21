@@ -119,7 +119,8 @@ class GantticClient:
 
     def get_tasks(self, timeMin: datetime.datetime, timeMax: datetime.datetime ,**kwargs) -> TaskList:
         """Gets stuff."""
-        return parse._tasklist(self._get_fetcher("task", timeMin=str(timeMin), timeMax=str(timeMax), **kwargs))
+        return parse._tasklist(self._get_fetcher("task", timeMin=timeMin.strftime('%Y-%m-%d %H:%M'),
+                                                 timeMax=timeMax.strftime('%Y-%m-%d %H:%M'), **kwargs))
 
     def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
         """Gets stuff."""
