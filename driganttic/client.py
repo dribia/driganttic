@@ -21,6 +21,7 @@ accelerate-your-requests-using-asyncio-62dafca83c33
 # import os
 from typing import Dict, Optional
 import requests
+import datetime
 
 from driganttic import parse
 # Internal modules
@@ -63,7 +64,7 @@ class GantticClient:
         self,
         *,
         APIKEY: str,
-        ENDPOINT: str = "https://planner.ganttic.com/api/",
+        ENDPOINT: str = "https://planner.ganttic.com/api",
         VERSION: str = "v1",
         FETCHERS: dict = FETCHERS,
         **kwargs,
@@ -84,7 +85,7 @@ class GantticClient:
         self.FETCHERS = FETCHERS
         self.session = requests.Session()
 
-    def _get_fetcher(self, fetcher_name: str, fetcher_detail_id: Optional[str]) -> Dict:
+    def _get_fetcher(self, fetcher_name: str, fetcher_detail_id: Optional[str] = None, **kwargs) -> Dict:
         """Gets list of the entire fetcher."""
         fetcher_endpoint = self.FETCHERS.get(fetcher_name,{}).get('endpoint')
         if fetcher_endpoint is None:
@@ -92,11 +93,11 @@ class GantticClient:
         if fetcher_detail_id is not None:
             fetcher_endpoint += '/' + str(fetcher_detail_id)
         headers = {"Accept": "application/json"}
-        auth = requests.auth.HTTPBasicAuth('apikey', self.APIKEY)
         req_string = self.ENDPOINT + '/' + fetcher_endpoint
+        kwargs['token'] = self.APIKEY
         with self.session as session:
             # TODO: Implement exception catching
-            return session.get(req_string, params = kwargs, headers = headers, auth=auth)
+            return session.get(req_string, params = kwargs, headers = headers)
 
 
     def _create_detailed(self, fetcher_name: str, fetcher_details: FetcherDetails):
@@ -116,9 +117,9 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def get_tasks(self, **kwargs) -> TaskList:
+    def get_tasks(self, timeMin: datetime.datetime, timeMax: datetime.datetime ,**kwargs) -> TaskList:
         """Gets stuff."""
-        return parse._tasklist(self._get_fetcher("task", **kwargs))
+        return parse._tasklist(self._get_fetcher("task", timeMin=str(timeMin), timeMax=str(timeMax), **kwargs))
 
     def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
         """Gets stuff."""
