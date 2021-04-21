@@ -22,8 +22,7 @@ accelerate-your-requests-using-asyncio-62dafca83c33
 from typing import Dict, Optional
 import requests
 
-import parse
-
+from driganttic import parse
 # Internal modules
 from driganttic.schemas.fetcher import (
     FetcherDetails,
