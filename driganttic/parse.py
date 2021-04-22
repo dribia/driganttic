@@ -11,6 +11,7 @@ from typing import Dict
 
 # Internal modules
 from driganttic.schemas.fetcher import (
+    DataFields,
     FetcherDetails,
     FetcherList,
     ProjectDetails,
@@ -106,3 +107,9 @@ def _taskdetails(response: Dict) -> TaskDetails:
     res["start"] = datetime.datetime.strptime(response.get("start"), "%Y-%m-%d")
     res["end"] = datetime.datetime.strptime(response.get("end"), "%Y-%m-%d")
     return TaskDetails(**res)
+
+
+def _datafields(response: Dict) -> DataFields:
+    """Parse the datafields response."""
+    res = response.copy()
+    return DataFields(**res)

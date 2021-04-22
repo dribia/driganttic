@@ -23,6 +23,7 @@ import requests
 
 from driganttic import parse
 from driganttic.schemas.fetcher import (
+    DataFields,
     FetcherDetails,
     ProjectDetails,
     ProjectList,
@@ -78,12 +79,22 @@ class GantticClient:
         self.session = requests.Session()
 
     def _get_fetcher(
-        self, fetcher_name: str, fetcher_detail_id: Optional[str] = None, **kwargs
+        self,
+        fetcher_name: str,
+        fetcher_detail_id: Optional[str] = None,
+        datafields=False,
+        **kwargs,
     ) -> requests.Response:
         """Gets list of the entire fetcher."""
         fetcher_endpoint = self.FETCHERS.get(fetcher_name, {}).get("endpoint")
         if fetcher_endpoint is None:
             raise NotImplementedError("Fectcher not implemented")
+        if datafields is True:
+            if fetcher_detail_id is not None:
+                raise ValueError(
+                    f"Both datafields {datafields} and id {fetcher_detail_id} cannot be set"
+                )
+            fetcher_endpoint = fetcher_endpoint + "/" + datafields
         if fetcher_detail_id is not None:
             # need to erase the final 's'
             fetcher_endpoint = fetcher_endpoint[:-1] + "/" + str(fetcher_detail_id)
@@ -93,6 +104,12 @@ class GantticClient:
         with self.session as session:
             # TODO: Implement exception catching
             return session.get(req_string, params=kwargs, headers=headers)
+
+    def _get_datafields(self, fetcher_name: str) -> DataFields:
+        """Gets datafields dictionary."""
+        return parse._datafields(
+            self._get_fetcher(fetcher_name, datafields=True).json()
+        )
 
     def _create_detailed(self, fetcher_name: str, fetcher_details: FetcherDetails):
         """Creates detailed fetcher."""
