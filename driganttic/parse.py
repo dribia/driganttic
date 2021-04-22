@@ -82,20 +82,20 @@ def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
 
     Returns: project Details Pydantic.
     """
-    # TODO: Redo the pydantic model
-    # dateAproxStart = [e['date'] for e in response['dataFields']
-    # ['dates'] if
-    # Translator.dates[e['id']] == "Data aproximada d'inici"][0]
-    # team = [e['number'] for e in response['dataFields']
-    # ['numbers'] if
-    # Translator.numbers[e['id']] == "Equip"][0]
-    # probability = [e['number'] for e in response['dataFields']
-    # ['numbers'] if
-    # Translator.numbers[e['id']] == "Probabilitat"][0]
-    # service = [Translator.listValues[e['id']][e['valueId']]
-    # for e in response
-    # service = response['dataFields']['listValues']
-    # scenario = response['dataFields']['listValues']
+    # TODO: Take out the fields into config
+    dateAproxStart = datetime.datetime.strptime(
+        response["dataFields"][Translator.dates["Data aproximada d'inici"]],
+        "%Y-%m-%d %H:%M:%S",
+    )
+    team = response["dataFields"][Translator.numbers["Equip"]]
+    probability = response["dataFields"][Translator.numbers["Probabilitat"]]
+    # service = Translator.listValues[response['listValues']
+    # [Translator.listValues['Tipus']]]
+    # scenario = Translator.listValues[response['listValues']
+    # [Translator.listValues['Tipus']]]
+    return ProjectDetails(
+        dateAproxStart=dateAproxStart, team=team, probability=probability
+    )
 
 
 def _projectlist(response: Dict) -> ProjectList:
@@ -129,7 +129,7 @@ def _datafields(response: Dict) -> DataFields:
     for k, v in res.items():
         if k == "listValues":
             res[k] = dict(
-                (vv["id"], {vv["name"]: _exhaust_dict(vv["values"], field="value")})
+                (vv["name"], {vv["id"]: _exhaust_dict(vv["values"], field="value")})
                 for vv in v
             )
         else:
@@ -139,4 +139,4 @@ def _datafields(response: Dict) -> DataFields:
 
 def _exhaust_dict(vallist: List, field="name") -> Dict:
     """Dict exhauster."""
-    return dict((vvv["id"], vvv[field]) for vvv in vallist)
+    return dict((vvv[field], vvv["id"]) for vvv in vallist)
