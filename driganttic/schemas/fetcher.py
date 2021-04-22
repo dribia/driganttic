@@ -75,8 +75,8 @@ class ProjectDetails(FetcherDetails):
 class DataFields(Base):
     """Data fields model for API."""
 
-    dates: Dict
-    numbers: Dict
-    listValues: Dict
-    texts: Dict
-    users: Dict
+    dates: Dict = {}
+    numbers: Dict = {}
+    listValues: Dict = {}
+    texts: Dict = {}
+    users: Dict = {}

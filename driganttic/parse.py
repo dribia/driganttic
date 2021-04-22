@@ -112,4 +112,6 @@ def _taskdetails(response: Dict) -> TaskDetails:
 def _datafields(response: Dict) -> DataFields:
     """Parse the datafields response."""
     res = response.copy()
+    for k, v in res.items():
+        res[k] = dict(v)
     return DataFields(**res)

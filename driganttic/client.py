@@ -94,7 +94,7 @@ class GantticClient:
                 raise ValueError(
                     f"Both datafields {datafields} and id {fetcher_detail_id} cannot be set"
                 )
-            fetcher_endpoint = fetcher_endpoint + "/" + datafields
+            fetcher_endpoint = fetcher_endpoint + "/" + "datafields"
         if fetcher_detail_id is not None:
             # need to erase the final 's'
             fetcher_endpoint = fetcher_endpoint[:-1] + "/" + str(fetcher_detail_id)
