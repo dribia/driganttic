@@ -16,13 +16,11 @@ see here: https://towardsdatascience.com/fast-and-async-in-python-
 accelerate-your-requests-using-asyncio-62dafca83c33
 """
 
-# External modules
 import datetime
 from typing import Optional
 
 import requests
 
-# Internal modules
 from driganttic import parse
 from driganttic.schemas.fetcher import (
     FetcherDetails,
