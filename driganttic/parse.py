@@ -83,18 +83,26 @@ def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
     Returns: project Details Pydantic.
     """
     # TODO: Take out the fields into config
-    dateAproxStart = datetime.datetime.strptime(
-        response["dataFields"][Translator.dates["Data aproximada d'inici"]],
-        "%Y-%m-%d %H:%M:%S",
+    # This needs careful writting (it's a mess!)
+    dateAproxStart = response["dataFields"].get(
+        Translator.dates["Data aproximada d'inici"]
     )
-    team = response["dataFields"][Translator.numbers["Equip"]]
-    probability = response["dataFields"][Translator.numbers["Probabilitat"]]
-    # service = Translator.listValues[response['listValues']
+    if dateAproxStart is not None:
+        dateAproxStart = datetime.datetime.strptime(
+            dateAproxStart,
+            "%Y-%m-%d %H:%M:%S",
+        )
+    team = response["dataFields"].get(Translator.numbers["Equip"])
+    probability = response["dataFields"].get(Translator.numbers["Probabilitat"])
+    # service = response["listValues"][Translator.listValues["Tipus"]]
     # [Translator.listValues['Tipus']]]
     # scenario = Translator.listValues[response['listValues']
     # [Translator.listValues['Tipus']]]
     return ProjectDetails(
-        dateAproxStart=dateAproxStart, team=team, probability=probability
+        dateAproxStart=dateAproxStart,
+        team=team,
+        probability=probability,
+        # service=service, scenario=scenario
     )
 
 
