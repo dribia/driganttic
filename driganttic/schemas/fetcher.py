@@ -21,6 +21,7 @@ class FetcherDetails(Base):
 
     Warning: Timestamps are time aware!
     """
+
     id: str
     fetched_timestamp: datetime.datetime = datetime.datetime.now()
     status: str
@@ -51,11 +52,13 @@ class ProjectList(FetcherList):
 
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
+
     # TODO: Add custom datafields (tipus?)
 
 
 class TaskDetails(FetcherDetails):
     """Task List schema."""
+
     projectId: str
     resources: List[str]
     start: datetime.datetime
@@ -65,4 +68,15 @@ class TaskDetails(FetcherDetails):
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
+
     # TODO: Add custom datafields (esperat, etc)
+
+
+class DataFields(Base):
+    """Data fields model for API."""
+
+    dates: List[List[datetime.datetime]]
+    numbers: List[List[float]]
+    listValues: List[List[str]]
+    texts: List[List[str]]
+    users: List[List[str]]
