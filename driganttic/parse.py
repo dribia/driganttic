@@ -7,7 +7,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
-from typing import Dict
+from typing import Dict, List
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -73,15 +73,29 @@ def _tasklist(response: Dict) -> TaskList:
     return TaskList(**_fetcherlist(response).dict())
 
 
-def _projectdetails(response: Dict) -> ProjectDetails:
+def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
     """Parse the project details response.
 
     Args:
         response: Ganttic API response
+        Translator: Pydantic Translator model
 
     Returns: project Details Pydantic.
     """
-    raise NotImplementedError("TBD")
+    # TODO: Redo the pydantic model
+    # dateAproxStart = [e['date'] for e in response['dataFields']
+    # ['dates'] if
+    # Translator.dates[e['id']] == "Data aproximada d'inici"][0]
+    # team = [e['number'] for e in response['dataFields']
+    # ['numbers'] if
+    # Translator.numbers[e['id']] == "Equip"][0]
+    # probability = [e['number'] for e in response['dataFields']
+    # ['numbers'] if
+    # Translator.numbers[e['id']] == "Probabilitat"][0]
+    # service = [Translator.listValues[e['id']][e['valueId']]
+    # for e in response
+    # service = response['dataFields']['listValues']
+    # scenario = response['dataFields']['listValues']
 
 
 def _projectlist(response: Dict) -> ProjectList:
@@ -114,8 +128,15 @@ def _datafields(response: Dict) -> DataFields:
     res = response.copy()
     for k, v in res.items():
         if k == "listValues":
-            # we drop the listvalues thing
-            res[k] = dict((e(0), e(1)) for e in v)
+            res[k] = dict(
+                (vv["id"], {vv["name"]: _exhaust_dict(vv["values"], field="value")})
+                for vv in v
+            )
         else:
-            res[k] = dict(v)
+            res[k] = _exhaust_dict(v)
     return DataFields(**res)
+
+
+def _exhaust_dict(vallist: List, field="name") -> Dict:
+    """Dict exhauster."""
+    return dict((vvv["id"], vvv[field]) for vvv in vallist)

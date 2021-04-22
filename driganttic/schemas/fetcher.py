@@ -5,7 +5,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 import datetime
 from enum import Enum
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from driganttic.schemas.base import Base
 
@@ -57,6 +57,12 @@ class TaskDetails(FetcherDetails):
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
+    dateAproxStart: datetime.datetime
+    team: float
+    probability: float
+    service: Enum
+    scenario: Enum
+
     # TODO: Add custom datafields (esperat, etc)
 
 
@@ -65,7 +71,7 @@ class DataFields(Base):
 
     dates: Dict = {}
     numbers: Dict = {}
-    listValues: Dict = {}
+    listValues: Any = {}
     texts: Dict = {}
     users: Dict = {}
 

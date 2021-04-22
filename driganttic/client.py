@@ -77,6 +77,7 @@ class GantticClient:
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
         self.session = requests.Session()
+        self.Translator = dict((k, self._get_datafields(k)) for k in FETCHERS.keys())
 
     def _get_fetcher(
         self,
@@ -188,7 +189,8 @@ class GantticClient:
     def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
         """Gets stuff."""
         return parse._projectdetails(
-            self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json()
+            self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
+            self.Translator["project"],
         )
 
     def create_project(self, ProjectData: ProjectDetails):
