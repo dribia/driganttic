@@ -48,7 +48,7 @@ def _resourcelist(response: Dict) -> ResourceList:
 
     Returns: Resource List Pydantic.
     """
-    raise NotImplementedError("TBD")
+    return ResourceList(**_fetcherlist(response).dict())
 
 
 def _resourcedetails(response: Dict) -> ResourceDetails:
@@ -113,5 +113,9 @@ def _datafields(response: Dict) -> DataFields:
     """Parse the datafields response."""
     res = response.copy()
     for k, v in res.items():
-        res[k] = dict(v)
+        if k == "listValues":
+            # we drop the listvalues thing
+            res[k] = dict((e(0), e(1)) for e in v)
+        else:
+            res[k] = dict(v)
     return DataFields(**res)

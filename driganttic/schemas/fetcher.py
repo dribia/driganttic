@@ -38,18 +38,6 @@ class FetcherList(Base):
     page: int
 
 
-class ResourceList(FetcherList):
-    """Resource List schema."""
-
-
-class TaskList(FetcherList):
-    """Task List schema."""
-
-
-class ProjectList(FetcherList):
-    """Project List schema."""
-
-
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
@@ -80,3 +68,15 @@ class DataFields(Base):
     listValues: Dict = {}
     texts: Dict = {}
     users: Dict = {}
+
+
+class ResourceList(FetcherList):
+    """Resource List schema."""
+
+
+class TaskList(FetcherList):
+    """Task List schema."""
+
+
+class ProjectList(FetcherList):
+    """Project List schema."""
