@@ -7,101 +7,39 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
+from typing import Dict
 
 # Internal modules
 from driganttic.schemas.fetcher import (
+    FetcherDetails,
+    FetcherList,
     ProjectDetails,
     ProjectList,
     ResourceDetails,
     ResourceList,
     TaskDetails,
     TaskList,
-    FetcherDetails,
-    FetcherList,
 )
 
-def _fetcherDetails(response: dict) -> FetcherDetails:
-    """Parse the fetcher details"""
+
+def _fetcherDetails(response: Dict) -> FetcherDetails:
+    """Parse the fetcher details."""
     res = response.copy()
-    res['created'] = datetime.datetime.strptime(response.get('created'),'%Y-%m-%d %H:%M:%S')
+    res["created"] = datetime.datetime.strptime(
+        response.get("created"), "%Y-%m-%d %H:%M:%S"
+    )
     return FetcherDetails(**res)
 
-def _fetcherlist(response: dict) -> FetcherList:
+
+def _fetcherlist(response: Dict) -> FetcherList:
     """Parse the fetcher list."""
-    items = [_fetcherDetails(e) for e in response.get('items',[])]
-    pages = response.get('pageCount')
-    page = response.get('page')
+    items = [_fetcherDetails(e) for e in response.get("items", [])]
+    pages = response.get("pageCount")
+    page = response.get("page")
     return FetcherList(fetched_items=items, pages=pages, page=page)
-"""Data schemas for fetcher.
-
-Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
-"""
-
-import datetime
-from enum import Enum
-from typing import List
-
-from driganttic.schemas.base import Base
 
 
-class ErrorMessage(str, Enum):
-    """Error message options."""
-
-    API_ERROR: str = "API_ERROR"
-
-
-class FetcherDetails(Base):
-    """Fetcher Details schema.
-
-    Warning: Timestamps are time aware!
-    """
-    id: str
-    fetched_timestamp: datetime.datetime = datetime.datetime.now()
-    status: str
-    name: str
-    created: datetime.datetime
-
-
-class FetcherList(Base):
-    """Fetcher List schema."""
-
-    fetched_timestamp: datetime.datetime = datetime.datetime.now()
-    fetched_items: List[FetcherDetails]
-    pages: int
-    page: int
-
-
-class ResourceList(FetcherList):
-    """Resource List schema."""
-
-
-class TaskList(FetcherList):
-    """Task List schema."""
-
-
-class ProjectList(FetcherList):
-    """Project List schema."""
-
-
-class ResourceDetails(FetcherDetails):
-    """Resource List schema."""
-    # TODO: Add custom datafields (tipus?)
-
-
-class TaskDetails(FetcherDetails):
-    """Task List schema."""
-    projectId: str
-    resources: List[str]
-    start: datetime.datetime
-    end: datetime.datetime
-    utilizationPercent: int
-
-
-class ProjectDetails(FetcherDetails):
-    """Project List schema."""
-    # TODO: Add custom datafields (esperat, etc)
-
-def _resourcelist(response: dict) -> ResourceList:
+def _resourcelist(response: Dict) -> ResourceList:
     """Parse the resource response.
 
     Args:
@@ -112,7 +50,7 @@ def _resourcelist(response: dict) -> ResourceList:
     raise NotImplementedError("TBD")
 
 
-def _resourcedetails(response: dict) -> ResourceDetails:
+def _resourcedetails(response: Dict) -> ResourceDetails:
     """Parse the resource details response.
 
     Args:
@@ -123,7 +61,7 @@ def _resourcedetails(response: dict) -> ResourceDetails:
     raise NotImplementedError("TBD")
 
 
-def _tasklist(response: dict) -> TaskList:
+def _tasklist(response: Dict) -> TaskList:
     """Parse the task response.
 
     Args:
@@ -131,10 +69,10 @@ def _tasklist(response: dict) -> TaskList:
 
     Returns: task List Pydantic.
     """
-    return _fetcherlist(response)
+    return TaskList(**_fetcherlist(response).dict())
 
 
-def _projectdetails(response: dict) -> ProjectDetails:
+def _projectdetails(response: Dict) -> ProjectDetails:
     """Parse the project details response.
 
     Args:
@@ -145,7 +83,7 @@ def _projectdetails(response: dict) -> ProjectDetails:
     raise NotImplementedError("TBD")
 
 
-def _projectlist(response: dict) -> ProjectList:
+def _projectlist(response: Dict) -> ProjectList:
     """Parse the project response.
 
     Args:
@@ -153,10 +91,10 @@ def _projectlist(response: dict) -> ProjectList:
 
     Returns: project List Pydantic.
     """
-    return _fetcherlist(response)
+    return ProjectList(**_fetcherlist(response).dict())
 
 
-def _taskdetails(response: dict) -> TaskDetails:
+def _taskdetails(response: Dict) -> TaskDetails:
     """Parse the task details response.
 
     Args:
@@ -165,6 +103,6 @@ def _taskdetails(response: dict) -> TaskDetails:
     Returns: Resource Details Pydantic.
     """
     res = response.copy()
-    res['start'] = datetime.datetime.strptime(response.get('start'),'%Y-%m-%d')
-    res['end'] = datetime.datetime.strptime(response.get('end'),'%Y-%m-%d')
+    res["start"] = datetime.datetime.strptime(response.get("start"), "%Y-%m-%d")
+    res["end"] = datetime.datetime.strptime(response.get("end"), "%Y-%m-%d")
     return TaskDetails(**res)
