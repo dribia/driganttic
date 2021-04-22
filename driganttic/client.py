@@ -16,15 +16,14 @@ see here: https://towardsdatascience.com/fast-and-async-in-python-
 accelerate-your-requests-using-asyncio-62dafca83c33
 """
 
-# import asyncio
-# import json
-# import os
-from typing import Dict, Optional
-import requests
+# External modules
 import datetime
+from typing import Optional
 
-from driganttic import parse
+import requests
+
 # Internal modules
+from driganttic import parse
 from driganttic.schemas.fetcher import (
     FetcherDetails,
     ProjectDetails,
@@ -34,12 +33,6 @@ from driganttic.schemas.fetcher import (
     TaskDetails,
     TaskList,
 )
-
-# import aiohttp
-# External modules
-# import requests
-# from aiohttp import ClientSession as ai_ClientSession
-
 
 FETCHERS = {
     "resource": {
@@ -56,6 +49,7 @@ FETCHERS = {
 
 # TODO: Move defaults to config
 # TODO: Async using aiohttp?
+
 
 class GantticClient:
     """Custom client for the Ganttic API."""
@@ -85,21 +79,22 @@ class GantticClient:
         self.FETCHERS = FETCHERS
         self.session = requests.Session()
 
-    def _get_fetcher(self, fetcher_name: str, fetcher_detail_id: Optional[str] = None, **kwargs) -> Dict:
+    def _get_fetcher(
+        self, fetcher_name: str, fetcher_detail_id: Optional[str] = None, **kwargs
+    ) -> requests.Response:
         """Gets list of the entire fetcher."""
-        fetcher_endpoint = self.FETCHERS.get(fetcher_name,{}).get('endpoint')
+        fetcher_endpoint = self.FETCHERS.get(fetcher_name, {}).get("endpoint")
         if fetcher_endpoint is None:
-            raise NotImplementedError('Fectcher not implemented')
+            raise NotImplementedError("Fectcher not implemented")
         if fetcher_detail_id is not None:
             # need to erase the final 's'
-            fetcher_endpoint = fetcher_endpoint[:-1] + '/' + str(fetcher_detail_id)
+            fetcher_endpoint = fetcher_endpoint[:-1] + "/" + str(fetcher_detail_id)
         headers = {"Accept": "application/json"}
-        req_string = self.ENDPOINT + '/' + fetcher_endpoint
-        kwargs['token'] = self.APIKEY
+        req_string = self.ENDPOINT + "/" + fetcher_endpoint
+        kwargs["token"] = self.APIKEY
         with self.session as session:
             # TODO: Implement exception catching
-            return session.get(req_string, params = kwargs, headers = headers)
-
+            return session.get(req_string, params=kwargs, headers=headers)
 
     def _create_detailed(self, fetcher_name: str, fetcher_details: FetcherDetails):
         """Creates detailed fetcher."""
@@ -118,14 +113,24 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def get_tasks(self, timeMin: datetime.datetime, timeMax: datetime.datetime ,**kwargs) -> TaskList:
+    def get_tasks(
+        self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
+    ) -> TaskList:
         """Gets stuff."""
-        return parse._tasklist(self._get_fetcher("task", timeMin=timeMin.strftime('%Y-%m-%d %H:%M'),
-                                                 timeMax=timeMax.strftime('%Y-%m-%d %H:%M'), **kwargs).json())
+        return parse._tasklist(
+            self._get_fetcher(
+                "task",
+                timeMin=timeMin.strftime("%Y-%m-%d %H:%M"),
+                timeMax=timeMax.strftime("%Y-%m-%d %H:%M"),
+                **kwargs,
+            ).json()
+        )
 
     def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
         """Gets stuff."""
-        return parse._taskdetails(self._get_fetcher("task", fetcher_detail_id = taskId, **kwargs).json())
+        return parse._taskdetails(
+            self._get_fetcher("task", fetcher_detail_id=taskId, **kwargs).json()
+        )
 
     def create_task(self, TaskData: TaskDetails):
         """Creates stuff."""
@@ -139,13 +144,15 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("task", taskId)
 
-    def get_resources(self,**kwargs) -> ResourceList:
+    def get_resources(self, **kwargs) -> ResourceList:
         """Gets stuff."""
-        return parse._resourcelist(self._get_fetcher("resource", **kwargs))
+        return parse._resourcelist(self._get_fetcher("resource", **kwargs).json())
 
     def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
         """Gets stuff."""
-        return parse._resourcedetails(self._get_fetcher("resource", fetcher_detail_id=resourceId, **kwargs))
+        return parse._resourcedetails(
+            self._get_fetcher("resource", fetcher_detail_id=resourceId, **kwargs).json()
+        )
 
     def create_resource(self, ResourceData: ResourceDetails):
         """Gets stuff."""
@@ -161,11 +168,13 @@ class GantticClient:
 
     def get_projects(self, **kwargs) -> ProjectList:
         """Gets stuff."""
-        return parse._projectlist(self._get_fetcher("project", **kwargs))
+        return parse._projectlist(self._get_fetcher("project", **kwargs).json())
 
     def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
         """Gets stuff."""
-        return parse._projectdetails(self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs))
+        return parse._projectdetails(
+            self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json()
+        )
 
     def create_project(self, ProjectData: ProjectDetails):
         """Gets stuff."""
