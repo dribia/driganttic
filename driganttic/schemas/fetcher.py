@@ -5,7 +5,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 import datetime
 from enum import Enum
-from typing import List
+from typing import Dict, List
 
 from driganttic.schemas.base import Base
 
@@ -75,8 +75,8 @@ class ProjectDetails(FetcherDetails):
 class DataFields(Base):
     """Data fields model for API."""
 
-    dates: List[List[datetime.datetime]]
-    numbers: List[List[float]]
-    listValues: List[List[str]]
-    texts: List[List[str]]
-    users: List[List[str]]
+    dates: Dict
+    numbers: Dict
+    listValues: Dict
+    texts: Dict
+    users: Dict
