@@ -49,5 +49,5 @@ All results are pydantic models already formatted with the interesting fields.
 
 - [x] get endpoints
 - [x] Fix tests on details
-- [x] Implement pydantic parsers
-- [x] Implement modify, create and delete methos
+- [ ] Implement pydantic parsers
+- [ ] Implement modify, create and delete methods
