@@ -5,6 +5,7 @@ Dribia 2021/01/11, Albert Iribarne <iribarne@dribia.com>
 
 import datetime
 import os
+import pprint
 import re
 
 from dotenv import load_dotenv
@@ -34,7 +35,6 @@ def test_GantticClient():
     for k in ["task"]:
         # test fetcher all
         name2 = f"get_{k}s"
-        name3 = f"{k}details"
         name4 = f"get_{k}_details"
         if k == "task":
             t1 = datetime.datetime.strptime("2021-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
@@ -43,7 +43,7 @@ def test_GantticClient():
         else:
             val1 = Client._get_fetcher(k)
         res = val1.json()
-        print(f"Sample call {k}:\n {res}")
+        pprint.pprint(f"Sample call {k}:\n {res}")
         assert val1.status_code == 200
         val2 = dri_parse._fetcherlist(res, k, Client.Translator["task"])
         if k == "task":
@@ -53,15 +53,17 @@ def test_GantticClient():
         assert val2 == val3
         resid = res["items"][0].get("id")
         assert resid is not None
+        pprint.pprint(val3.dict())
         # test one particualr ID
         val11 = Client._get_fetcher(fetcher_name=k, fetcher_detail_id=resid)
         res2 = val11.json()
-        print(f"Sample call detailed {k}:\n {res2}")
+        pprint.pprint(f"Sample call detailed {k}:\n {res2}")
         assert val1.status_code == 200
         assert res2["id"] == res["items"][0]["id"]
-        val2 = dri_parse.__dict__.get("_" + name3)(res2)
+        val2 = dri_parse._fetcherdetails(res2, k, Client.Translator["task"])
         val3 = Client.__getattribute__(name4)(resid)
         assert val2 == val3
+        pprint.pprint(val3.dict())
         # test data values
         val21 = Client._get_fetcher(fetcher_name=k, datafields=True)
         res21 = val21.json()
