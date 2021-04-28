@@ -16,6 +16,36 @@ class ErrorMessage(str, Enum):
     API_ERROR: str = "API_ERROR"
 
 
+# Enums
+
+
+class ServiceEnum(str, Enum):
+    """Standard Enum."""
+
+    projecte = "Projecte"
+    manteniment = "Manteniment"
+    intern = "Intern"
+    discovery = "Discovery"
+    peed = "PEED"
+
+
+class RolEnum(str, Enum):
+    """Standard Enum."""
+
+    soci = "Soci"
+    bd = "BD"
+    lds = "LDS"
+    ds = "DS"
+
+
+class ScenarioEnum(str, Enum):
+    """Standard Enum."""
+
+    esperat = "Esperat"
+    optimista = "Optimista"
+    congelat = "Congelat"
+
+
 class FetcherDetails(Base):
     """Fetcher Details schema.
 
@@ -41,6 +71,9 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
+    dedicacio: float
+    rol: RolEnum
+
     # TODO: Add custom datafields (tipus?)
 
 
@@ -60,8 +93,8 @@ class ProjectDetails(FetcherDetails):
     dateAproxStart: datetime.datetime
     team: float
     probability: float
-    service: Enum
-    scenario: Enum
+    service: ServiceEnum
+    scenario: ScenarioEnum
 
     # TODO: Add custom datafields (esperat, etc)
 
