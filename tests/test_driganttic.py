@@ -33,7 +33,6 @@ def test_GantticClient():
     # for k in driganttic.client.FETCHERS.keys():
     for k in ["task"]:
         # test fetcher all
-        name1 = f"{k}list"
         name2 = f"get_{k}s"
         name3 = f"{k}details"
         name4 = f"get_{k}_details"
@@ -46,7 +45,7 @@ def test_GantticClient():
         res = val1.json()
         print(f"Sample call {k}:\n {res}")
         assert val1.status_code == 200
-        val2 = dri_parse.__dict__.get("_" + name1)(res)
+        val2 = dri_parse._fetcherlist(res, k, Client.Translator["task"])
         if k == "task":
             val3 = Client.__getattribute__(name2)(timeMin=t1, timeMax=t2)
         else:
