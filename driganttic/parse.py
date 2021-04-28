@@ -63,20 +63,23 @@ def _resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
 
     Returns: task Details Pydantic.
     """
-    res = response.copy()
-    res["dedicacio"] = (
-        response.get("dataFields", {})
-        .get("numbers", {})
-        .get(Translator.numbers["Max dedicació facturable"])
-    )
-    # parse role
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
+    # TODO Fix this, parsing is hellish!
+    res = response.copy()
+    # parse numbers
+    nv = response.get("dataFields", {}).get("numbers", [])
+    trans_dedicacio = Translator.numbers[
+        "Max dedicació facturable"
+    ]  # 1st is always the key
+    ded = [n["number"] for n in nv if n["id"] == trans_dedicacio][0]
+    res["dedicacio"] = float(ded)
+    # parse role
     lv = response.get("dataFields", {}).get("listValues", [])
     trans_role = Translator.listValues["Role"]  # 1st is always the key
     role_id = trans_role.keys()
     role = [trans_role[n["id"]][n["valueId"]] for n in lv if n["id"] in role_id][0]
-    res["role"] = role.lower()
+    res["rol"] = role
     return ResourceDetails(**res)
 
 
@@ -89,6 +92,7 @@ def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
 
     Returns: project Details Pydantic.
     """
+    # TODO: all this is wrong
     # TODO: Take out the fields into config
     # This needs careful writting (it's a mess!)
     dateAproxStart = response["dataFields"].get(

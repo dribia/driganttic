@@ -32,7 +32,7 @@ def test_GantticClient():
     Client = dri_client.GantticClient(APIKEY=APIKEY)
 
     # for k in driganttic.client.FETCHERS.keys():
-    for k in ["task"]:
+    for k in ["task", "resource"]:
         # test fetcher all
         name2 = f"get_{k}s"
         name4 = f"get_{k}_details"
