@@ -79,10 +79,16 @@ class DataFields(Base):
 class ResourceList(FetcherList):
     """Resource List schema."""
 
+    fetched_items: List[ResourceDetails]
+
 
 class TaskList(FetcherList):
     """Task List schema."""
 
+    fetched_items: List[TaskDetails]
+
 
 class ProjectList(FetcherList):
     """Project List schema."""
+
+    fetched_items: List[ProjectDetails]

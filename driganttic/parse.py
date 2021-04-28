@@ -7,7 +7,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
-from typing import Dict, List
+from typing import Callable, Dict, List, Union
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -23,7 +23,10 @@ from driganttic.schemas.fetcher import (
 )
 
 
-def _fetcherDetails(response: Dict) -> FetcherDetails:
+# TODO: Probably can simplify return types
+def _fetcherdetails(
+    response: Dict, resource_name: str, Translator: DataFields
+) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
     if response.get("created") is not None:
@@ -32,48 +35,40 @@ def _fetcherDetails(response: Dict) -> FetcherDetails:
         )
     else:
         res["created"] = None
-    return FetcherDetails(**res)
+
+    if resource_name not in DETAIL_PARSERS.keys():
+        return FetcherDetails(**res)
+    else:
+        return DETAIL_PARSERS[resource_name](res, Translator)
 
 
-def _fetcherlist(response: Dict) -> FetcherList:
-    """Parse the fetcher list."""
-    items = [_fetcherDetails(e) for e in response.get("items", [])]
-    pages = response.get("pageCount")
-    page = response.get("page")
-    return FetcherList(fetched_items=items, pages=pages, page=page)
-
-
-def _resourcelist(response: Dict) -> ResourceList:
-    """Parse the resource response.
+def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
+    """Parse the task details response.
 
     Args:
         response: Ganttic API response
+        Translator: Description of task fields
 
-    Returns: Resource List Pydantic.
+    Returns: Resource Details Pydantic.
     """
-    return ResourceList(**_fetcherlist(response).dict())
+    res = response.copy()
+    res["start"] = datetime.datetime.strptime(response.get("start"), "%Y-%m-%d")
+    res["end"] = datetime.datetime.strptime(response.get("end"), "%Y-%m-%d")
+    return TaskDetails(**res)
 
 
-def _resourcedetails(response: Dict) -> ResourceDetails:
+def _resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
     """Parse the resource details response.
 
     Args:
         response: Ganttic API response
+        Translator: Description of  fields
 
     Returns: task Details Pydantic.
     """
+    res = response.copy()
     raise NotImplementedError("TBD")
-
-
-def _tasklist(response: Dict) -> TaskList:
-    """Parse the task response.
-
-    Args:
-        response: Ganttic API response
-
-    Returns: task List Pydantic.
-    """
-    return TaskList(**_fetcherlist(response).dict())
+    return ResourceDetails(**res)
 
 
 def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
@@ -109,29 +104,59 @@ def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
     )
 
 
-def _projectlist(response: Dict) -> ProjectList:
+# TODO: Probably can simplify return types
+def _fetcherlist(
+    response: Dict,
+    resource_name: str,
+    Translator: DataFields,
+) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
+    """Parse the fetcher list."""
+    items = [
+        _fetcherdetails(e, resource_name, Translator) for e in response.get("items", [])
+    ]
+    pages = response.get("pageCount")
+    page = response.get("page")
+    res = {"fetched_items": items, "pages": pages, "page": page}
+    if resource_name not in LIST_PARSERS.keys():
+        return FetcherList(**res)
+    else:
+        return LIST_PARSERS[resource_name](res, Translator)
+
+
+def _tasklist(response: Dict, Translator=DataFields) -> TaskList:
+    """Parse the task response.
+
+    Args:
+        response: Ganttic API response
+        Translator: Description of  fields
+
+    Returns: task List Pydantic.
+    """
+    return TaskList(**response)
+
+
+def _resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
+    """Parse the resource response.
+
+    Args:
+        response: Ganttic API response
+        Translator: Description of  fields
+
+    Returns: Resource List Pydantic.
+    """
+    return ResourceList(**response)
+
+
+def _projectlist(response: Dict, Translator=DataFields) -> ProjectList:
     """Parse the project response.
 
     Args:
         response: Ganttic API response
+        Translator: Description of  fields
 
     Returns: project List Pydantic.
     """
-    return ProjectList(**_fetcherlist(response).dict())
-
-
-def _taskdetails(response: Dict) -> TaskDetails:
-    """Parse the task details response.
-
-    Args:
-        response: Ganttic API response
-
-    Returns: Resource Details Pydantic.
-    """
-    res = response.copy()
-    res["start"] = datetime.datetime.strptime(response.get("start"), "%Y-%m-%d")
-    res["end"] = datetime.datetime.strptime(response.get("end"), "%Y-%m-%d")
-    return TaskDetails(**res)
+    return ProjectList(**response)
 
 
 def _datafields(response: Dict) -> DataFields:
@@ -161,3 +186,15 @@ def _datafields(response: Dict) -> DataFields:
 def _exhaust_dict(vallist: List, field_v="id", field_k="name") -> Dict:
     """Dict exhauster."""
     return dict((vvv[field_k], vvv[field_v]) for vvv in vallist)
+
+
+DETAIL_PARSERS: Dict[str, Callable] = {
+    "task": _taskdetails,
+    "resource": _resourcedetails,
+    "project": _projectdetails,
+}
+LIST_PARSERS: Dict[str, Callable] = {
+    "task": _tasklist,
+    "resource": _resourcelist,
+    "project": _projectlist,
+}

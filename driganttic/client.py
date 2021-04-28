@@ -133,19 +133,57 @@ class GantticClient:
         self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
     ) -> TaskList:
         """Gets stuff."""
-        return parse._tasklist(
+        return parse._fetcherlist(
             self._get_fetcher(
                 "task",
                 timeMin=timeMin.strftime("%Y-%m-%d %H:%M"),
                 timeMax=timeMax.strftime("%Y-%m-%d %H:%M"),
                 **kwargs,
-            ).json()
+            ).json(),
+            "task",
+            self.Translator.get("task"),
+        )
+
+    def get_projects(self, **kwargs) -> ProjectList:
+        """Gets stuff."""
+        return parse._fetcherlist(
+            self._get_fetcher("project", **kwargs).json(),
+            "project",
+            self.Translator.get("project"),
+        )
+
+    def get_resources(self, **kwargs) -> ResourceList:
+        """Gets stuff."""
+        return parse._fetcherlist(
+            self._get_fetcher("resource", **kwargs).json(),
+            "resource",
+            self.Translator.get("resource"),
         )
 
     def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
         """Gets stuff."""
-        return parse._taskdetails(
-            self._get_fetcher("task", fetcher_detail_id=taskId, **kwargs).json()
+        return parse._fetcherdetails(
+            self._get_fetcher("task", fetcher_detail_id=taskId, **kwargs).json(),
+            "task",
+            self.Translator.get("task"),
+        )
+
+    def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
+        """Gets stuff."""
+        return parse._fetcherdetails(
+            self._get_fetcher(
+                "resource", fetcher_detail_id=resourceId, **kwargs
+            ).json(),
+            "resource",
+            self.Translator.get("resource"),
+        )
+
+    def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
+        """Gets stuff."""
+        return parse._fetcherdetails(
+            self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
+            "project",
+            self.Translator.get("project"),
         )
 
     def create_task(self, TaskData: TaskDetails):
@@ -160,16 +198,6 @@ class GantticClient:
         """Gets stuff."""
         return self._delete_detailed("task", taskId)
 
-    def get_resources(self, **kwargs) -> ResourceList:
-        """Gets stuff."""
-        return parse._resourcelist(self._get_fetcher("resource", **kwargs).json())
-
-    def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
-        """Gets stuff."""
-        return parse._resourcedetails(
-            self._get_fetcher("resource", fetcher_detail_id=resourceId, **kwargs).json()
-        )
-
     def create_resource(self, ResourceData: ResourceDetails):
         """Gets stuff."""
         return self._create_detailed("resource", ResourceData)
@@ -181,17 +209,6 @@ class GantticClient:
     def delete_resource(self, resourceId: str):
         """Gets stuff."""
         return self._delete_detailed("resource", resourceId)
-
-    def get_projects(self, **kwargs) -> ProjectList:
-        """Gets stuff."""
-        return parse._projectlist(self._get_fetcher("project", **kwargs).json())
-
-    def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
-        """Gets stuff."""
-        return parse._projectdetails(
-            self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
-            self.Translator["project"],
-        )
 
     def create_project(self, ProjectData: ProjectDetails):
         """Gets stuff."""
