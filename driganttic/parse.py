@@ -26,9 +26,12 @@ from driganttic.schemas.fetcher import (
 def _fetcherDetails(response: Dict) -> FetcherDetails:
     """Parse the fetcher details."""
     res = response.copy()
-    res["created"] = datetime.datetime.strptime(
-        response.get("created"), "%Y-%m-%d %H:%M:%S"
-    )
+    if response.get("created") is not None:
+        res["created"] = datetime.datetime.strptime(
+            response.get("created"), "%Y-%m-%d %H:%M:%S"
+        )
+    else:
+        res["created"] = None
     return FetcherDetails(**res)
 
 
@@ -132,7 +135,10 @@ def _taskdetails(response: Dict) -> TaskDetails:
 
 
 def _datafields(response: Dict) -> DataFields:
-    """Parse the datafields response."""
+    """Parse the datafields response.
+
+    It generates a dict that can be referenced by id.
+    """
     res = response.copy()
     for k, v in res.items():
         if k == "listValues":

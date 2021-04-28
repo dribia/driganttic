@@ -5,7 +5,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from driganttic.schemas.base import Base
 
@@ -26,7 +26,7 @@ class FetcherDetails(Base):
     fetched_timestamp: datetime.datetime = datetime.datetime.now()
     status: str
     name: str
-    created: datetime.datetime
+    created: Optional[datetime.datetime]
 
 
 class FetcherList(Base):
