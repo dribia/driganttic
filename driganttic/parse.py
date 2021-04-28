@@ -64,7 +64,19 @@ def _resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
     Returns: task Details Pydantic.
     """
     res = response.copy()
-    raise NotImplementedError("TBD")
+    res["dedicacio"] = (
+        response.get("dataFields", {})
+        .get("numbers", {})
+        .get(Translator.numbers["Max dedicació facturable"])
+    )
+    # parse role
+    # TODO: This is terrible, but invovles
+    #  changing the datafield definition
+    lv = response.get("dataFields", {}).get("listValues", [])
+    trans_role = Translator.listValues["Role"]  # 1st is always the key
+    role_id = trans_role.keys()
+    role = [trans_role[n["id"]][n["valueId"]] for n in lv if n["id"] in role_id][0]
+    res["role"] = role.lower()
     return ResourceDetails(**res)
 
 
