@@ -45,11 +45,11 @@ def test_GantticClient():
         res = val1.json()
         pprint.pprint(f"Sample call {k}:\n {res}")
         assert val1.status_code == 200
-        val2 = dri_parse._fetcherlist(res, k, Client.Translator["task"])
+        val2 = dri_parse._fetcherlist(res, k, Client.Translator[k])
         if k == "task":
             val3 = Client.__getattribute__(name2)(timeMin=t1, timeMax=t2)
         else:
-            val3 = Client.__getattribute__(name2)(k)
+            val3 = Client.__getattribute__(name2)()
         assert val2 == val3
         resid = res["items"][0].get("id")
         assert resid is not None
@@ -60,7 +60,7 @@ def test_GantticClient():
         pprint.pprint(f"Sample call detailed {k}:\n {res2}")
         assert val1.status_code == 200
         assert res2["id"] == res["items"][0]["id"]
-        val2 = dri_parse._fetcherdetails(res2, k, Client.Translator["task"])
+        val2 = dri_parse._fetcherdetails(res2, k, Client.Translator[k])
         val3 = Client.__getattribute__(name4)(resid)
         assert val2 == val3
         pprint.pprint(val3.dict())
