@@ -9,6 +9,8 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 import datetime
 from typing import Callable, Dict, List, Union
 
+import dateparser
+
 # Internal modules
 from driganttic.schemas.fetcher import (
     DataFields,
@@ -29,12 +31,7 @@ def _fetcherdetails(
 ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
-    if response.get("created") is not None:
-        res["created"] = datetime.datetime.strptime(
-            response.get("created"), "%Y-%m-%d %H:%M:%S"
-        )
-    else:
-        res["created"] = None
+    res["created"] = _parse_timestamps(response.get("created"))
 
     if resource_name not in DETAIL_PARSERS.keys():
         return FetcherDetails(**res)
@@ -52,8 +49,8 @@ def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     Returns: Resource Details Pydantic.
     """
     res = response.copy()
-    res["start"] = datetime.datetime.strptime(response.get("start"), "%Y-%m-%d")
-    res["end"] = datetime.datetime.strptime(response.get("end"), "%Y-%m-%d")
+    res["start"] = _parse_timestamps(response.get("start"))
+    res["end"] = _parse_timestamps(response.get("end"))
     return TaskDetails(**res)
 
 
@@ -198,3 +195,8 @@ LIST_PARSERS: Dict[str, Callable] = {
     "resource": _resourcelist,
     "project": _projectlist,
 }
+
+
+def _parse_timestamps(timeval: str) -> datetime.datetime:
+    """Parses timestamps robustly."""
+    return dateparser.parse(timeval)
