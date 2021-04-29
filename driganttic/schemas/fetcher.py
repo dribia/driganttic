@@ -115,10 +115,6 @@ class DataFields(Base):
     texts: Dict = {}
     users: Dict = {}
 
-    def get_value_by_id(self, item_id: str, item_type: DataFieldsEnum) -> Any:
-        """Fetches the value identified by id."""
-        raise NotImplementedError
-
 
 class ResourceList(FetcherList):
     """Resource List schema."""

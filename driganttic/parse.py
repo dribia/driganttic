@@ -15,7 +15,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
-from typing import Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import dateparser
 import numpy as np
@@ -72,23 +72,26 @@ def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceD
 
     Returns: task Details Pydantic.
     """
+    n_interest_fields = {"Max dedicació facturable": "dedicacio"}
+    c_interest_fields = {"Role": "rol"}
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
     # TODO Fix this, parsing is hellish!
     res = response.copy()
     # parse numbers
     nv = response.get("dataFields", {}).get("numbers", [])
-    trans_dedicacio = Translator.numbers[
-        "Max dedicació facturable"
-    ]  # 1st is always the key
-    ded = [n["number"] for n in nv if n["id"] == trans_dedicacio][0]
-    res["dedicacio"] = float(ded)
-    # parse role
+    if nv:
+        for k, v in n_interest_fields.items():
+            val = get_number(nv, k, Translator.numbers)
+            if val is not None:
+                res[v] = val
+    # parse cats
     lv = response.get("dataFields", {}).get("listValues", [])
-    trans_role = Translator.listValues["Role"]  # 1st is always the key
-    role_id = trans_role.keys()
-    role = [trans_role[n["id"]][n["valueId"]] for n in lv if n["id"] in role_id][0]
-    res["rol"] = role
+    if lv:
+        for k, v in c_interest_fields.items():
+            val = get_category(lv, k, Translator.listValues)
+            if val is not None:
+                res[v] = val
     return ResourceDetails(**res)
 
 
@@ -101,39 +104,33 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
 
     Returns: project Details Pydantic.
     """
+    n_interest_fields = {"Equip": "team", "Probabilitat": "probability"}
+    c_interest_fields = {"Tipus": "service", "Escenari": "scenario"}
+    # TODO: This is terrible, but invovles
+    #  changing the datafield definition
+    # TODO Fix this, parsing is hellish!
     res = response.copy()
+    # parse dates
     dateAproxStart = response["dataFields"].get(
         Translator.dates["Data aproximada d'inici"]
     )
     if dateAproxStart is not None:
         dateAproxStart = parse_timestamp(dateAproxStart)
-    res["dateAproxStart"] = dateAproxStart
-    # TODO Make a proper class for this mess on the
-    #  pydantic model
+        res["dateAproxStart"] = dateAproxStart
     # parse numbers
     nv = response.get("dataFields", {}).get("numbers", [])
-    trans_team = Translator.numbers["Equip"]
-    trans_prob = Translator.numbers["Probabilitat"]
-    # 1st is always the key
-    prob = [n["number"] for n in nv if n["id"] == trans_prob][0]
-    res["probability"] = float(prob)
-    team = [n["number"] for n in nv if n["id"] == trans_team][0]
-    res["team"] = float(team)
-
-    # parse listvalues
+    if nv:
+        for k, v in n_interest_fields.items():
+            val = get_number(nv, k, Translator.numbers)
+            if val is not None:
+                res[v] = val
+    # parse cats
     lv = response.get("dataFields", {}).get("listValues", [])
-    trans_service = Translator.listValues["Tipus"]  # 1st is always the key
-    trans_scenario = Translator.listValues["Escenari"]  # 1st is always the key
-    service_id = trans_service.keys()
-    scenario_id = trans_scenario.keys()
-    service = [
-        trans_service[n["id"]][n["valueId"]] for n in lv if n["id"] in service_id
-    ][0]
-    scenario = [
-        trans_scenario[n["id"]][n["valueId"]] for n in lv if n["id"] in scenario_id
-    ][0]
-    res["service"] = service
-    res["scenario"] = scenario
+    if lv:
+        for k, v in c_interest_fields.items():
+            val = get_category(nv, k, Translator.listValues)
+            if val is not None:
+                res[v] = val
     return ProjectDetails(**res)
 
 
@@ -245,3 +242,34 @@ def parse_timestamp(
         return dateparser.parse(timeval)
     else:
         return none_type
+
+
+def get_number(
+    listitems: List, item_name: str, Translator_field: Dict
+) -> Optional[float]:
+    """Gets number from translator by name."""
+    trans = Translator_field.get(item_name)
+    if trans:
+        val_comp = [n["number"] for n in listitems if n["id"] == trans]
+        if len(val_comp) > 0:
+            return val_comp[0]
+        else:
+            return None
+    else:
+        raise NameError("No such item name in Translator")
+
+
+def get_category(listitems: List, item_name: str, Translator_field: Dict) -> Any:
+    """Gets category from translator by name."""
+    trans = Translator_field.get(item_name, {})
+    trans_id = trans.keys()
+    if trans:
+        val_comp = [
+            trans[n["id"]][n["valueId"]] for n in listitems if n["id"] in trans_id
+        ]
+        if len(val_comp) > 0:
+            return val_comp[0]
+        else:
+            return None
+    else:
+        raise NameError("No such item name in Translator")

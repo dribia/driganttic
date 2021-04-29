@@ -19,8 +19,6 @@ load_dotenv()
 
 APIKEY = os.getenv("APIKEY")
 
-Client = dri_client.GantticClient(APIKEY=APIKEY)
-
 
 def test_version():
     """Assert that `__version__` exists and is valid."""
@@ -38,7 +36,7 @@ def test_GantticClient():
     Client = dri_client.GantticClient(APIKEY=APIKEY)
 
     # for k in driganttic.client.FETCHERS.keys():
-    for k in ["task", "resource"]:
+    for k in ["task", "resource", "project"]:
         # test fetcher all
         name2 = f"get_{k}s"
         name4 = f"get_{k}_details"
