@@ -20,7 +20,7 @@ schemas (fetcher.py). The parsing is made on the file parse.py.
 """
 
 import datetime
-from typing import Optional
+from typing import Optional, Union
 
 import requests
 
@@ -28,6 +28,7 @@ from driganttic import parse
 from driganttic.schemas.fetcher import (
     DataFields,
     FetcherDetails,
+    FetcherList,
     ProjectDetails,
     ProjectList,
     ResourceDetails,
@@ -144,11 +145,23 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
+    def _exhaust_pages(
+        self, *args, **kwargs
+    ) -> Union[FetcherList, TaskList, ProjectList, ResourceList]:
+        """Exhaust pages from API."""
+        Tnew = parse._fetcherlist(*args, **kwargs)
+        Tfinal = Tnew.copy()
+        while Tnew.page < Tnew.pages:
+            kwargs["page"] = Tnew.page + 1
+            Tnew = parse._fetcherlist(*args, **kwargs)
+            Tfinal.fetched_items.append(Tnew.fetched_items)
+        return Tfinal
+
     def get_tasks(
         self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
     ) -> TaskList:
         """Gets stuff."""
-        return parse._fetcherlist(
+        return self._exhaust_pages(
             self._get_fetcher(
                 "task",
                 timeMin=timeMin.strftime("%Y-%m-%d %H:%M"),

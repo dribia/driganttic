@@ -24,6 +24,8 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 ## Example
 
+**Warning: It may not works with badly formatted tasks from past usages of ganttic. Use from 2021 onwards!**
+
 The client is very trivial to use. It implement wrappers to the main types of available calls.
 ```python
 from driganttic import parse as dg_parse
@@ -38,8 +40,8 @@ dict_of_fields = Client.Translator
 print(f'Available fetchers: {dg_client.FETCHERS}')
 # get all projects, tasks and resources
 projects = Client.get_projects()
-tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('2020-01-01'),
-                         timeMax= dg_parse.parse_timestamp('2021-01-01'))
+tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('2021-01-01'),
+                         timeMax= dg_parse.parse_timestamp('2021-04-30'))
 resources = Client.get_resources()
 
 p_id = projects.fetched_items.pop().id
