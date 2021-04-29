@@ -15,9 +15,10 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
-from typing import Callable, Dict, List, Union
+from typing import Callable, Dict, List, Optional, Union
 
 import dateparser
+import numpy as np
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -221,7 +222,15 @@ LIST_PARSERS: Dict[str, Callable] = {
     "project": _refine_projectlist,
 }
 
+# TODO: Evaluate if a better dependency
+#  can be used on none_type (it's only to define NAT)
 
-def parse_timestamp(timeval: str) -> datetime.datetime:
+
+def parse_timestamp(
+    timeval: Optional[str], none_type=np.datetime64("NaT")
+) -> datetime.datetime:
     """Parses timestamps robustly."""
-    return dateparser.parse(timeval)
+    if timeval is not None:
+        return dateparser.parse(timeval)
+    else:
+        return none_type
