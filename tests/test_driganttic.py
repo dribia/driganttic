@@ -41,30 +41,28 @@ def test_GantticClient():
         name2 = f"get_{k}s"
         name4 = f"get_{k}_details"
         if k == "task":
-            t1 = datetime.datetime.strptime("2021-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+            t1 = datetime.datetime.strptime("2021-04-01 00:00:00", "%Y-%m-%d %H:%M:%S")
             t2 = datetime.datetime.strptime("2021-05-01 00:00:00", "%Y-%m-%d %H:%M:%S")
             val1 = Client._exhaust_pages(k, timeMin=t1, timeMax=t2)
         else:
             val1 = Client._exhaust_pages(k)
-        res = val1.json()
-        pprint.pprint(f"Sample call {k}:\n {res}")
+        pprint.pprint(f"Sample call {k}:\n {val1}")
         # check return
-        assert val1.status_code == 200
-        val2 = dri_parse._fetcherlist(res, k, Client.Translator[k])
+        val2 = dri_parse._fetcherlist(val1, k, Client.Translator[k])
         if k == "task":
             val3 = Client.__getattribute__(name2)(timeMin=t1, timeMax=t2)
         else:
             val3 = Client.__getattribute__(name2)()
         assert val2 == val3
         # test one particualr ID
-        resid = res["items"][0].get("id")
+        resid = val1["items"][0].get("id")
         assert resid is not None
         pprint.pprint(val3.dict())
         val11 = Client._get_fetcher(fetcher_name=k, fetcher_detail_id=resid)
         res2 = val11.json()
         pprint.pprint(f"Sample call detailed {k}:\n {res2}")
-        assert val1.status_code == 200
-        assert res2["id"] == res["items"][0]["id"]
+        assert val11.status_code == 200
+        assert res2["id"] == val1["items"][0]["id"]
         val2 = dri_parse._fetcherdetails(res2, k, Client.Translator[k])
         val3 = Client.__getattribute__(name4)(resid)
         assert val2 == val3
