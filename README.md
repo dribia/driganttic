@@ -26,7 +26,8 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 The client is very trivial to use. It implement wrappers to the main types of available calls.
 ```python
-from driganttic import dg_parse, dg_client
+from driganttic import parse as dg_parse
+from driganttic import client as dg_client
 
 APIKEY = 'yourapikey'
 
