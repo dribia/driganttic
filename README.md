@@ -38,7 +38,7 @@ dict_of_fields = Client.Translator
 print(f'Available fetchers: {dg_client.FETCHERS}')
 # get all projects, tasks and resources
 projects = Client.get_projects()
-tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('2010-01-01'),
+tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('2020-01-01'),
                          timeMax= dg_parse.parse_timestamp('2021-01-01'))
 resources = Client.get_resources()
 
