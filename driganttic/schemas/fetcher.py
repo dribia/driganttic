@@ -82,17 +82,17 @@ class TaskDetails(FetcherDetails):
     resources: List[str]
     start: datetime.datetime
     end: datetime.datetime
-    utilizationPercent: int
+    utilizationPercent: Optional[float]
 
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
-    dateAproxStart: datetime.datetime
-    team: float
-    probability: float
-    service: ServiceEnum
-    scenario: ScenarioEnum
+    dateAproxStart: Optional[datetime.datetime]
+    team: Optional[float]
+    probability: Optional[float]
+    service: Optional[ServiceEnum]
+    scenario: Optional[ScenarioEnum]
 
 
 # Note: We are adding a method here and this is not totally clean,
