@@ -149,25 +149,25 @@ class GantticClient:
         self, *args, **kwargs
     ) -> Union[FetcherList, TaskList, ProjectList, ResourceList]:
         """Exhaust pages from API."""
-        Tnew = parse._fetcherlist(*args, **kwargs)
-        Tfinal = Tnew.copy()
-        while Tnew.page < Tnew.pages:
-            kwargs["page"] = Tnew.page + 1
-            Tnew = parse._fetcherlist(*args, **kwargs)
-            Tfinal.fetched_items.append(Tnew.fetched_items)
-        return Tfinal
+        rnew = self._get_fetcher(*args, **kwargs).json()
+        rfinal = rnew.copy()
+        while rnew["page"] < rnew["pages"]:
+            kwargs["page"] = rnew["page"] + 1
+            rnew = self._get_fetcher(*args, **kwargs).json()
+            rfinal["items"].append(rnew["items"])
+        return rfinal
 
     def get_tasks(
         self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
     ) -> TaskList:
         """Gets stuff."""
-        return self._exhaust_pages(
-            self._get_fetcher(
+        return parse._fetcherlist(
+            self._exhaust_pages(
                 "task",
                 timeMin=timeMin.strftime("%Y-%m-%d %H:%M"),
                 timeMax=timeMax.strftime("%Y-%m-%d %H:%M"),
                 **kwargs,
-            ).json(),
+            ),
             "task",
             self.Translator.get("task"),
         )
