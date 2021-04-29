@@ -38,16 +38,16 @@ dict_of_fields = Client.Translator
 print(f'Available fetchers: {dg_client.FETCHERS}')
 # get all projects, tasks and resources
 projects = Client.get_projects()
-tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('1990-01-01'), 
-                         timeMax= dg_parse..parse_timestamp('2021-07-01'))
+tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('2010-01-01'),
+                         timeMax= dg_parse.parse_timestamp('2021-01-01'))
 resources = Client.get_resources()
 
-p_id = projects.fetched_items.pop.id
-t_id = tasks.fetched_items.pop.id
-r_id = resources.fetched_items.pop.id
+p_id = projects.fetched_items.pop().id
+t_id = tasks.fetched_items.pop().id
+r_id = resources.fetched_items.pop().id
 one_project = Client.get_project_details(projectId=p_id)
-one_task = Client.get_task_details(projectId=t_id)
-one_resource = Client.get_resource_details(projectId=r_id)
+one_task = Client.get_task_details(taskId=t_id)
+one_resource = Client.get_resource_details(resourceId=r_id)
 ```
 All results are pydantic models already formatted with the interesting fields.
 See the `fetcher.py` file in `/schemas` for details.

@@ -41,7 +41,7 @@ def test_GantticClient():
         name2 = f"get_{k}s"
         name4 = f"get_{k}_details"
         if k == "task":
-            t1 = datetime.datetime.strptime("2021-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+            t1 = datetime.datetime.strptime("2015-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
             t2 = datetime.datetime.strptime("2021-05-01 00:00:00", "%Y-%m-%d %H:%M:%S")
             val1 = Client._get_fetcher(k, timeMin=t1, timeMax=t2)
         else:

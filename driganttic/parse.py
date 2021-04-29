@@ -18,7 +18,6 @@ import datetime
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import dateparser
-import numpy as np
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -40,15 +39,16 @@ def _fetcherdetails(
 ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
-    res["created"] = parse_timestamp(response.get("created"))
-
+    created = parse_timestamp(response.get("created"))
+    if created is not None:
+        res["created"] = created
     if resource_name not in DETAIL_PARSERS.keys():
         return FetcherDetails(**res)
     else:
         return DETAIL_PARSERS[resource_name](res, Translator)
 
 
-def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
+def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     """Parse the task details response.
 
     Args:
@@ -58,8 +58,12 @@ def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     Returns: Resource Details Pydantic.
     """
     res = response.copy()
-    res["start"] = parse_timestamp(response.get("start"))
-    res["end"] = parse_timestamp(response.get("end"))
+    start = parse_timestamp(response.get("start"))
+    if start is not None:
+        res["start"] = start
+    end = parse_timestamp(response.get("end"))
+    if end is not None:
+        res["end"] = end
     return TaskDetails(**res)
 
 
@@ -116,7 +120,8 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
     )
     if dateAproxStart is not None:
         dateAproxStart = parse_timestamp(dateAproxStart)
-        res["dateAproxStart"] = dateAproxStart
+        if dateAproxStart is not None:
+            res["dateAproxStart"] = dateAproxStart
     # parse numbers
     nv = response.get("dataFields", {}).get("numbers", [])
     if nv:
@@ -165,7 +170,7 @@ def _refine_tasklist(response: Dict, Translator=DataFields) -> TaskList:
     return TaskList(**response)
 
 
-def _resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
+def _refine_resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
     """Parse the resource response.
 
     Args:
@@ -220,13 +225,13 @@ def _exhaust_dict(vallist: List, field_v="id", field_k="name") -> Dict:
 
 
 DETAIL_PARSERS: Dict[str, Callable] = {
-    "task": _taskdetails,
+    "task": _refine_taskdetails,
     "resource": _refine_resourcedetails,
     "project": _refine_projectdetails,
 }
 LIST_PARSERS: Dict[str, Callable] = {
     "task": _refine_tasklist,
-    "resource": _resourcelist,
+    "resource": _refine_resourcelist,
     "project": _refine_projectlist,
 }
 
@@ -234,9 +239,7 @@ LIST_PARSERS: Dict[str, Callable] = {
 #  can be used on none_type (it's only to define NAT)
 
 
-def parse_timestamp(
-    timeval: Optional[str], none_type=np.datetime64("NaT")
-) -> datetime.datetime:
+def parse_timestamp(timeval: Optional[str], none_type=None) -> datetime.datetime:
     """Parses timestamps robustly."""
     if timeval is not None:
         return dateparser.parse(timeval)
