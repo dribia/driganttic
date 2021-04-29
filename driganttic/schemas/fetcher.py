@@ -74,8 +74,6 @@ class ResourceDetails(FetcherDetails):
     dedicacio: float
     rol: RolEnum
 
-    # TODO: Add custom datafields (tipus?)
-
 
 class TaskDetails(FetcherDetails):
     """Task List schema."""
@@ -95,8 +93,6 @@ class ProjectDetails(FetcherDetails):
     probability: float
     service: ServiceEnum
     scenario: ScenarioEnum
-
-    # TODO: Add custom datafields (esperat, etc)
 
 
 class DataFields(Base):

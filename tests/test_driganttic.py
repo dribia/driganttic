@@ -77,3 +77,6 @@ def test_GantticClient():
         val22 = dri_parse.__dict__.get("_datafields")(res21)
         val23 = Client.__getattribute__("_get_datafields")(k)
         assert val22 == val23
+
+
+# test_GantticClient()

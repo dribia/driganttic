@@ -62,7 +62,7 @@ def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     return TaskDetails(**res)
 
 
-def _resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
+def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
     """Parse the resource details response.
 
     Args:
@@ -91,7 +91,7 @@ def _resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
     return ResourceDetails(**res)
 
 
-def _projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
+def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
     """Parse the project details response.
 
     Args:
@@ -144,7 +144,7 @@ def _fetcherlist(
         return LIST_PARSERS[resource_name](res, Translator)
 
 
-def _tasklist(response: Dict, Translator=DataFields) -> TaskList:
+def _refine_tasklist(response: Dict, Translator=DataFields) -> TaskList:
     """Parse the task response.
 
     Args:
@@ -168,7 +168,7 @@ def _resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
     return ResourceList(**response)
 
 
-def _projectlist(response: Dict, Translator=DataFields) -> ProjectList:
+def _refine_projectlist(response: Dict, Translator=DataFields) -> ProjectList:
     """Parse the project response.
 
     Args:
@@ -185,6 +185,7 @@ def _datafields(response: Dict) -> DataFields:
 
     It generates a dict that can be referenced by id.
     """
+    # TODO This probably needs heavy refactor
     res = response.copy()
     for k, v in res.items():
         if k == "listValues":
@@ -211,13 +212,13 @@ def _exhaust_dict(vallist: List, field_v="id", field_k="name") -> Dict:
 
 DETAIL_PARSERS: Dict[str, Callable] = {
     "task": _taskdetails,
-    "resource": _resourcedetails,
-    "project": _projectdetails,
+    "resource": _refine_resourcedetails,
+    "project": _refine_projectdetails,
 }
 LIST_PARSERS: Dict[str, Callable] = {
-    "task": _tasklist,
+    "task": _refine_tasklist,
     "resource": _resourcelist,
-    "project": _projectlist,
+    "project": _refine_projectlist,
 }
 
 
