@@ -13,7 +13,7 @@ repository = "https://bitbucket.org/dribia_team/driganttic"
 documentation = "https://docs.dribia.dev/driganttic"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.7.1,<4.0"
 importlib-metadata = {version = "^1.0", python = "<3.8"}
 aiohttp = "^3.7.4"
 requests = "^2.25.1"
@@ -22,6 +22,8 @@ ipython = "^7.22.0"
 pydantic = "^1.8.1"
 dateparser = "^1.0.0"
 numpy = "^1.20.2"
+jupyter = "^1.0.0"
+pandas = "^1.2.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"
