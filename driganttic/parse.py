@@ -2,6 +2,14 @@
 
 We parse the anttic API responses as Pydantic models.
 
+Note that the models are custom to Dribia needs, if you need
+to change the custom data fields, you need to change each function.
+
+The logic is a follows: There are two base methods (_fetcher) and
+(_fetcherDetails) to parse the generic things, and then functions
+to refine (taks, project, resource) the speciffic stuff defined
+in the pydantic models.
+
 Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 """
 

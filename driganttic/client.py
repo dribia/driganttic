@@ -6,14 +6,17 @@ Exceptions:
 Functions (all are methods within the class):
 - [Get] list: Task, Resource, Project
 - [Get] details of list element: Task, Resource, Project
-- [Post] create something: Task, Resource, Project
-- [post] edit something: Task, Resource, Project
+- TODO: [Post] create something: Task, Resource, Project.
+- TODO: [post] edit something: Task, Resource, Project
 
 Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
-For an explanation on the async,
-see here: https://towardsdatascience.com/fast-and-async-in-python-
-accelerate-your-requests-using-asyncio-62dafca83c33
+The entire Client Class is based on the same logic: It calls one method
+that performs the GET queries and then there are wrappers for better
+legiblity (like _get_tasks).
+
+To code, check that the returns are well defined pydantinc
+schemas (fetcher.py). The parsing is made on the file parse.py.
 """
 
 import datetime
@@ -77,6 +80,7 @@ class GantticClient:
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
         self.session = requests.Session()
+        # Important: This gets the custom user defined data fields
         self.Translator = dict((k, self._get_datafields(k)) for k in FETCHERS.keys())
 
     def _get_fetcher(
@@ -86,7 +90,18 @@ class GantticClient:
         datafields=False,
         **kwargs,
     ) -> requests.Response:
-        """Gets list of the entire fetcher."""
+        """Main method for GEt requests.
+
+        Args:
+            fetcher_name: One of either task, resource or project
+            fetcher_detail_id: Set to a string ID if you want details on
+                a resource.
+            datafields: Set to True if you want only the custom
+                datafields for a fetcher_name
+
+        Returns: Requests response.
+
+        """
         fetcher_endpoint = self.FETCHERS.get(fetcher_name, {}).get("endpoint")
         if fetcher_endpoint is None:
             raise NotImplementedError("Fectcher not implemented")
@@ -107,7 +122,7 @@ class GantticClient:
             return session.get(req_string, params=kwargs, headers=headers)
 
     def _get_datafields(self, fetcher_name: str) -> DataFields:
-        """Gets datafields dictionary."""
+        """Gets datafields ID-valueID translation."""
         return parse._datafields(
             self._get_fetcher(fetcher_name, datafields=True).json()
         )
@@ -169,7 +184,7 @@ class GantticClient:
         )
 
     def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
-        """Gets stuff."""
+        """Gets detailed stuff."""
         return parse._fetcherdetails(
             self._get_fetcher(
                 "resource", fetcher_detail_id=resourceId, **kwargs
@@ -179,7 +194,7 @@ class GantticClient:
         )
 
     def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
-        """Gets stuff."""
+        """Gets detailed stuff."""
         return parse._fetcherdetails(
             self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
             "project",
@@ -187,7 +202,7 @@ class GantticClient:
         )
 
     def create_task(self, TaskData: TaskDetails):
-        """Creates stuff."""
+        """Creates detailed stuff."""
         return self._create_detailed("task", TaskData)
 
     def modify_task(self, taskId: str, TaskData: TaskDetails):
