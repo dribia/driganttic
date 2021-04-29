@@ -66,4 +66,3 @@ To do so, you need to do two things:
 ## TODOs
 
 - [ ] Implement modify, create and delete methods
-- [ ] Refactor DataFields pydantic and parsing for custom data fields (a bit messy).
