@@ -91,8 +91,8 @@ class ProjectDetails(FetcherDetails):
     dateAproxStart: Optional[datetime.datetime]
     team: Optional[float]
     probability: Optional[float]
-    service: Optional[ServiceEnum]
-    scenario: Optional[ScenarioEnum]
+    service: ServiceEnum
+    scenario: ScenarioEnum
 
 
 # Note: We are adding a method here and this is not totally clean,

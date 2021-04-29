@@ -133,7 +133,7 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
     lv = response.get("dataFields", {}).get("listValues", [])
     if lv:
         for k, v in c_interest_fields.items():
-            val = get_category(nv, k, Translator.listValues)
+            val = get_category(lv, k, Translator.listValues)
             if val is not None:
                 res[v] = val
     return ProjectDetails(**res)
