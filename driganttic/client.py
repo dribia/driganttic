@@ -151,10 +151,10 @@ class GantticClient:
         """Exhaust pages from API."""
         rnew = self._get_fetcher(*args, **kwargs).json()
         rfinal = rnew.copy()
-        while rnew["page"] < rnew["pages"]:
+        while rnew["page"] < rnew["pageCount"]:
             kwargs["page"] = rnew["page"] + 1
             rnew = self._get_fetcher(*args, **kwargs).json()
-            rfinal["items"].append(rnew["items"])
+            rfinal["items"].extend(rnew["items"])
         return rfinal
 
     def get_tasks(
@@ -175,7 +175,7 @@ class GantticClient:
     def get_projects(self, **kwargs) -> ProjectList:
         """Gets stuff."""
         return parse._fetcherlist(
-            self._get_fetcher("project", **kwargs).json(),
+            self._exhaust_pages("project", **kwargs),
             "project",
             self.Translator.get("project"),
         )
@@ -183,7 +183,7 @@ class GantticClient:
     def get_resources(self, **kwargs) -> ResourceList:
         """Gets stuff."""
         return parse._fetcherlist(
-            self._get_fetcher("resource", **kwargs).json(),
+            self._exhaust_pages("resource", **kwargs),
             "resource",
             self.Translator.get("resource"),
         )
