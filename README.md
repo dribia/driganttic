@@ -26,28 +26,41 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 The client is very trivial to use. It implement wrappers to the main types of available calls.
 ```python
-from driganttic.client import GantticClient
-import driganttic
+from driganttic import dg_parse, dg_client
 
 APIKEY = 'yourapikey'
 
-Client = GantticClient(APIKEY=APIKEY)
+Client = dg_client.GantticClient(APIKEY=APIKEY)
+# get dictionary of custom fields
+dict_of_fields = Client.Translator
 
-print(f'Available fetchers: {driganttic.client.FETCHERS}')
+print(f'Available fetchers: {dg_client.FETCHERS}')
 # get all projects, tasks and resources
 projects = Client.get_projects()
-tasks = Client.get_tasks(timeMin =, timeMax=)
+tasks = Client.get_tasks(timeMin = dg_parse.parse_timestamp('1990-01-01'), 
+                         timeMax= dg_parse..parse_timestamp('2021-07-01'))
 resources = Client.get_resources()
 
-one_project = Client.get_project_details(projectId='23932')
-one_task = Client.get_task_details(projectId='23932')
-one_resource = Client.get_resource_details(projectId='23932')
+p_id = projects.fetched_items.pop.id
+t_id = tasks.fetched_items.pop.id
+r_id = resources.fetched_items.pop.id
+one_project = Client.get_project_details(projectId=p_id)
+one_task = Client.get_task_details(projectId=t_id)
+one_resource = Client.get_resource_details(projectId=r_id)
 ```
 All results are pydantic models already formatted with the interesting fields.
+See the `fetcher.py` file in `/schemas` for details.
+
+## Modifications
+
+The only changes needed here are to adapt to your own custom data fields.
+To do so, you need to do two things:
+
+1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
+2. Define the relevant parsing methods in `parse.py`, only for the fields that are not general. The rest of fields are taken care by `_fetcher` or `_fetcherDetails` methods.
+
 
 ## TODOs
 
-- [x] get endpoints
-- [x] Fix tests on details
-- [ ] Implement pydantic parsers
 - [ ] Implement modify, create and delete methods
+- [ ] Refactor DataFields pydantic and parsing for custom data fields (a bit messy).

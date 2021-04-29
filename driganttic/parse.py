@@ -39,7 +39,7 @@ def _fetcherdetails(
 ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
-    res["created"] = _parse_timestamps(response.get("created"))
+    res["created"] = parse_timestamp(response.get("created"))
 
     if resource_name not in DETAIL_PARSERS.keys():
         return FetcherDetails(**res)
@@ -57,8 +57,8 @@ def _taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     Returns: Resource Details Pydantic.
     """
     res = response.copy()
-    res["start"] = _parse_timestamps(response.get("start"))
-    res["end"] = _parse_timestamps(response.get("end"))
+    res["start"] = parse_timestamp(response.get("start"))
+    res["end"] = parse_timestamp(response.get("end"))
     return TaskDetails(**res)
 
 
@@ -221,6 +221,6 @@ LIST_PARSERS: Dict[str, Callable] = {
 }
 
 
-def _parse_timestamps(timeval: str) -> datetime.datetime:
+def parse_timestamp(timeval: str) -> datetime.datetime:
     """Parses timestamps robustly."""
     return dateparser.parse(timeval)
