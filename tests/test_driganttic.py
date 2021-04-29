@@ -28,7 +28,13 @@ def test_version():
 
 
 def test_GantticClient():
-    """Tester for Ganttic Client class."""
+    """Tester for Ganttic Client class.
+
+    Because all tasks, projects and resources are roughly the same,
+    the code is less legible but it iterates the entire
+    test with a for loop. Note the test only checks the m
+    ethods to work, data validation is made by pyndatinc.
+    """
     Client = dri_client.GantticClient(APIKEY=APIKEY)
 
     # for k in driganttic.client.FETCHERS.keys():
