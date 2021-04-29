@@ -108,7 +108,8 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
     if dateAproxStart is not None:
         dateAproxStart = parse_timestamp(dateAproxStart)
     res["dateAproxStart"] = dateAproxStart
-    # TODO Make a proper class for this mess
+    # TODO Make a proper class for this mess on the
+    #  pydantic model
     # parse numbers
     nv = response.get("dataFields", {}).get("numbers", [])
     trans_team = Translator.numbers["Equip"]
