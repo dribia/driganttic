@@ -101,29 +101,39 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
 
     Returns: project Details Pydantic.
     """
-    # TODO: all this is wrong
-    # TODO: Take out the fields into config
-    # This needs careful writting (it's a mess!)
+    res = response.copy()
     dateAproxStart = response["dataFields"].get(
         Translator.dates["Data aproximada d'inici"]
     )
     if dateAproxStart is not None:
-        dateAproxStart = datetime.datetime.strptime(
-            dateAproxStart,
-            "%Y-%m-%d %H:%M:%S",
-        )
-    team = response["dataFields"].get(Translator.numbers["Equip"])
-    probability = response["dataFields"].get(Translator.numbers["Probabilitat"])
-    # service = response["listValues"][Translator.listValues["Tipus"]]
-    # [Translator.listValues['Tipus']]]
-    # scenario = Translator.listValues[response['listValues']
-    # [Translator.listValues['Tipus']]]
-    return ProjectDetails(
-        dateAproxStart=dateAproxStart,
-        team=team,
-        probability=probability,
-        # service=service, scenario=scenario
-    )
+        dateAproxStart = parse_timestamp(dateAproxStart)
+    res["dateAproxStart"] = dateAproxStart
+    # TODO Make a proper class for this mess
+    # parse numbers
+    nv = response.get("dataFields", {}).get("numbers", [])
+    trans_team = Translator.numbers["Equip"]
+    trans_prob = Translator.numbers["Probabilitat"]
+    # 1st is always the key
+    prob = [n["number"] for n in nv if n["id"] == trans_prob][0]
+    res["probability"] = float(prob)
+    team = [n["number"] for n in nv if n["id"] == trans_team][0]
+    res["team"] = float(team)
+
+    # parse listvalues
+    lv = response.get("dataFields", {}).get("listValues", [])
+    trans_service = Translator.listValues["Tipus"]  # 1st is always the key
+    trans_scenario = Translator.listValues["Escenari"]  # 1st is always the key
+    service_id = trans_service.keys()
+    scenario_id = trans_scenario.keys()
+    service = [
+        trans_service[n["id"]][n["valueId"]] for n in lv if n["id"] in service_id
+    ][0]
+    scenario = [
+        trans_scenario[n["id"]][n["valueId"]] for n in lv if n["id"] in scenario_id
+    ][0]
+    res["service"] = service
+    res["scenario"] = scenario
+    return ProjectDetails(**res)
 
 
 # TODO: Probably can simplify return types

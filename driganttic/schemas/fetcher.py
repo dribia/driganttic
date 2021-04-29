@@ -95,6 +95,17 @@ class ProjectDetails(FetcherDetails):
     scenario: ScenarioEnum
 
 
+# Note: We are adding a method here and this is not totally clean,
+# but it's handy, because managing datafields is messy.
+
+
+class DataFieldsEnum(str, Enum):
+    """Standard enum."""
+
+    listValues = "listValues"
+    numbers = "numbers"
+
+
 class DataFields(Base):
     """Data fields model for API."""
 
@@ -103,6 +114,10 @@ class DataFields(Base):
     listValues: Any = {}
     texts: Dict = {}
     users: Dict = {}
+
+    def get_value_by_id(self, item_id: str, item_type: DataFieldsEnum) -> Any:
+        """Fetches the value identified by id."""
+        raise NotImplementedError
 
 
 class ResourceList(FetcherList):
