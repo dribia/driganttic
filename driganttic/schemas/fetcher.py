@@ -44,6 +44,7 @@ class ScenarioEnum(str, Enum):
     esperat = "Esperat"
     optimista = "Optimista"
     congelat = "Congelat"
+    confirmat = "Confirmat"
 
 
 class FetcherDetails(Base):
