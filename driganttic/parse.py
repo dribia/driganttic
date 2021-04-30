@@ -93,9 +93,9 @@ def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceD
     lv = response.get("dataFields", {}).get("listValues", [])
     if lv:
         for k, v in c_interest_fields.items():
-            val = get_category(lv, k, Translator.listValues)
-            if val is not None:
-                res[v] = val
+            val2 = get_category(lv, k, Translator.listValues)
+            if val2 is not None:
+                res[v] = val2
     return ResourceDetails(**res)
 
 
@@ -128,14 +128,14 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
         for k, v in n_interest_fields.items():
             val2 = get_number(nv, k, Translator.numbers)
             if val2 is not None:
-                res[v] = val
+                res[v] = val2
     # parse cats
     lv = response.get("dataFields", {}).get("listValues", [])
     if lv:
         for k, v in c_interest_fields.items():
             val3 = get_category(lv, k, Translator.listValues)
             if val3 is not None:
-                res[v] = val
+                res[v] = val3
     return ProjectDetails(**res)
 
 
