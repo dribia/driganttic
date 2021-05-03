@@ -5,7 +5,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from driganttic.schemas.base import Base
 
@@ -64,7 +64,7 @@ class FetcherList(Base):
     """Fetcher List schema."""
 
     fetched_timestamp: datetime.datetime = datetime.datetime.now()
-    fetched_items: List[FetcherDetails]
+    fetched_items: Sequence[FetcherDetails]
     pages: int
     page: int
 
@@ -121,16 +121,16 @@ class DataFields(Base):
 class ResourceList(FetcherList):
     """Resource List schema."""
 
-    fetched_items: List[ResourceDetails]
+    fetched_items: Sequence[ResourceDetails]
 
 
 class TaskList(FetcherList):
     """Task List schema."""
 
-    fetched_items: List[TaskDetails]
+    fetched_items: Sequence[TaskDetails]
 
 
 class ProjectList(FetcherList):
     """Project List schema."""
 
-    fetched_items: List[ProjectDetails]
+    fetched_items: Sequence[ProjectDetails]

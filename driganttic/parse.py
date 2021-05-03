@@ -93,9 +93,9 @@ def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceD
     lv = response.get("dataFields", {}).get("listValues", [])
     if lv:
         for k, v in c_interest_fields.items():
-            val = get_category(lv, k, Translator.listValues)
-            if val is not None:
-                res[v] = val
+            val2 = get_category(lv, k, Translator.listValues)
+            if val2 is not None:
+                res[v] = val2
     return ResourceDetails(**res)
 
 
@@ -114,32 +114,32 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
         "Sprints": "sprints",
     }
     c_interest_fields = {"Tipus": "service", "Escenari": "scenario"}
+    d_interest_fields = {"Data aproximada d'inici": "dateAproxStart"}
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
     # TODO Fix this, parsing is hellish!
     res = response.copy()
     # parse dates
-    dateAproxStart = response["dataFields"].get(
-        Translator.dates["Data aproximada d'inici"]
-    )
-    if dateAproxStart is not None:
-        dateAproxStart = parse_timestamp(dateAproxStart)
-        if dateAproxStart is not None:
-            res["dateAproxStart"] = dateAproxStart
+    dv = response.get("dataFields", {}).get("dates", [])
+    if dv:
+        for k, v in d_interest_fields.items():
+            val = get_date(dv, k, Translator.dates)
+            if val is not None:
+                res[v] = val
     # parse numbers
     nv = response.get("dataFields", {}).get("numbers", [])
     if nv:
         for k, v in n_interest_fields.items():
-            val = get_number(nv, k, Translator.numbers)
-            if val is not None:
-                res[v] = val
+            val2 = get_number(nv, k, Translator.numbers)
+            if val2 is not None:
+                res[v] = val2
     # parse cats
     lv = response.get("dataFields", {}).get("listValues", [])
     if lv:
         for k, v in c_interest_fields.items():
-            val = get_category(lv, k, Translator.listValues)
-            if val is not None:
-                res[v] = val
+            val3 = get_category(lv, k, Translator.listValues)
+            if val3 is not None:
+                res[v] = val3
     return ProjectDetails(**res)
 
 
@@ -260,6 +260,21 @@ def get_number(
         val_comp = [n["number"] for n in listitems if n["id"] == trans]
         if len(val_comp) > 0:
             return val_comp[0]
+        else:
+            return None
+    else:
+        raise NameError("No such item name in Translator")
+
+
+def get_date(
+    listitems: List, item_name: str, Translator_field: Dict
+) -> Optional[datetime.datetime]:
+    """Gets date from translator by name."""
+    trans = Translator_field.get(item_name)
+    if trans:
+        val_comp = [n["date"] for n in listitems if n["id"] == trans]
+        if len(val_comp) > 0:
+            return parse_timestamp(val_comp[0])
         else:
             return None
     else:

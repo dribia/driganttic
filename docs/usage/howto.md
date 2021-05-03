@@ -27,7 +27,7 @@ one_task = Client.get_task_details(taskId=t_id)
 one_resource = Client.get_resource_details(resourceId=r_id)
 ```
 
-!!! "Things to note"
+!!! warning "Things to note"
     1. The client will automatically exhaust all the pagination if you use the `get_something` method (not the `get_something_details`).
     2. The client returns pydantic models, where only the relevant data has been kept.
 
