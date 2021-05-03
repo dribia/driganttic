@@ -79,7 +79,8 @@ class ResourceDetails(FetcherDetails):
 class TaskDetails(FetcherDetails):
     """Task List schema."""
 
-    projectId: str
+    # could be holidays
+    projectId: Optional[str]
     resources: List[str]
     start: datetime.datetime
     end: datetime.datetime
