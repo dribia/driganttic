@@ -94,6 +94,7 @@ class ProjectDetails(FetcherDetails):
     probability: Optional[float]
     service: ServiceEnum
     scenario: ScenarioEnum
+    sprints: Optional[float]
 
 
 # Note: We are adding a method here and this is not totally clean,

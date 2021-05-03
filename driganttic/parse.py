@@ -108,7 +108,11 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
 
     Returns: project Details Pydantic.
     """
-    n_interest_fields = {"Equip": "team", "Probabilitat": "probability"}
+    n_interest_fields = {
+        "Equip": "team",
+        "Probabilitat": "probability",
+        "Sprints": "sprints",
+    }
     c_interest_fields = {"Tipus": "service", "Escenari": "scenario"}
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
