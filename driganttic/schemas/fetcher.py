@@ -56,7 +56,7 @@ class FetcherDetails(Base):
     id: str
     fetched_timestamp: datetime.datetime = datetime.datetime.now()
     status: str
-    name: str
+    name: Optional[str]
     created: Optional[datetime.datetime]
 
 
@@ -73,7 +73,7 @@ class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
     dedicacio: float
-    rol: RolEnum
+    role: RolEnum
 
 
 class TaskDetails(FetcherDetails):
@@ -92,6 +92,7 @@ class ProjectDetails(FetcherDetails):
 
     dateAproxStart: Optional[datetime.datetime]
     team: Optional[float]
+    discount: Optional[float]
     probability: Optional[float]
     service: ServiceEnum
     scenario: ScenarioEnum

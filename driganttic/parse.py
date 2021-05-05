@@ -77,7 +77,7 @@ def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceD
     Returns: task Details Pydantic.
     """
     n_interest_fields = {"Max dedicació facturable": "dedicacio"}
-    c_interest_fields = {"Role": "rol"}
+    c_interest_fields = {"Role": "role"}
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
     # TODO Fix this, parsing is hellish!
@@ -112,6 +112,7 @@ def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDet
         "Equip": "team",
         "Probabilitat": "probability",
         "Sprints": "sprints",
+        "Descompte": "discount",
     }
     c_interest_fields = {"Tipus": "service", "Escenari": "scenario"}
     d_interest_fields = {"Data aproximada d'inici": "dateAproxStart"}
