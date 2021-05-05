@@ -244,7 +244,9 @@ LIST_PARSERS: Dict[str, Callable] = {
 #  can be used on none_type (it's only to define NAT)
 
 
-def parse_timestamp(timeval: Optional[str], none_type=None) -> datetime.datetime:
+def parse_timestamp(
+    timeval: Optional[str], none_type=None
+) -> Optional[datetime.datetime]:
     """Parses timestamps robustly."""
     if timeval is not None:
         return dateparser.parse(timeval)

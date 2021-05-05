@@ -20,7 +20,7 @@ schemas (fetcher.py). The parsing is made on the file parse.py.
 """
 
 import datetime
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 import requests
 
@@ -145,9 +145,7 @@ class GantticClient:
         # TODO: USe fetchers dict
         raise NotImplementedError("TBD")
 
-    def _exhaust_pages(
-        self, *args, **kwargs
-    ) -> Union[FetcherList, TaskList, ProjectList, ResourceList]:
+    def _exhaust_pages(self, *args, **kwargs) -> Dict:
         """Exhaust pages from API."""
         rnew = self._get_fetcher(*args, **kwargs).json()
         rfinal = rnew.copy()
@@ -159,7 +157,7 @@ class GantticClient:
 
     def get_tasks(
         self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
-    ) -> TaskList:
+    ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
         """Gets stuff."""
         return parse._fetcherlist(
             self._exhaust_pages(
@@ -169,49 +167,59 @@ class GantticClient:
                 **kwargs,
             ),
             "task",
-            self.Translator.get("task"),
+            self.Translator.get("task", DataFields()),
         )
 
-    def get_projects(self, **kwargs) -> ProjectList:
+    def get_projects(
+        self, **kwargs
+    ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
         """Gets stuff."""
         return parse._fetcherlist(
             self._exhaust_pages("project", **kwargs),
             "project",
-            self.Translator.get("project"),
+            self.Translator.get("project", DataFields()),
         )
 
-    def get_resources(self, **kwargs) -> ResourceList:
+    def get_resources(
+        self, **kwargs
+    ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
         """Gets stuff."""
         return parse._fetcherlist(
             self._exhaust_pages("resource", **kwargs),
             "resource",
-            self.Translator.get("resource"),
+            self.Translator.get("resource", DataFields()),
         )
 
-    def get_task_details(self, taskId: str, **kwargs) -> FetcherDetails:
+    def get_task_details(
+        self, taskId: str, **kwargs
+    ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
         """Gets stuff."""
         return parse._fetcherdetails(
             self._get_fetcher("task", fetcher_detail_id=taskId, **kwargs).json(),
             "task",
-            self.Translator.get("task"),
+            self.Translator.get("task", DataFields()),
         )
 
-    def get_resource_details(self, resourceId: str, **kwargs) -> ResourceDetails:
+    def get_resource_details(
+        self, resourceId: str, **kwargs
+    ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
         """Gets detailed stuff."""
         return parse._fetcherdetails(
             self._get_fetcher(
                 "resource", fetcher_detail_id=resourceId, **kwargs
             ).json(),
             "resource",
-            self.Translator.get("resource"),
+            self.Translator.get("resource", DataFields()),
         )
 
-    def get_project_details(self, projectId: str, **kwargs) -> ProjectDetails:
+    def get_project_details(
+        self, projectId: str, **kwargs
+    ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
         """Gets detailed stuff."""
         return parse._fetcherdetails(
             self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
             "project",
-            self.Translator.get("project"),
+            self.Translator.get("project", DataFields()),
         )
 
     def create_task(self, TaskData: TaskDetails):
