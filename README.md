@@ -65,4 +65,5 @@ To do so, you need to do two things:
 
 ## TODOs
 
+- [ ] Implement good testing, in line with [driplaces](https://bitbucket.org/dribia_team/driplaces/src/master/tests/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
