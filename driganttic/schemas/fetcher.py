@@ -53,7 +53,7 @@ class FetcherDetails(Base):
     Warning: Timestamps are time aware!
     """
 
-    id: str
+    id: Optional[str]
     fetched_timestamp: datetime.datetime = datetime.datetime.now()
     status: str
     name: Optional[str]
@@ -72,7 +72,7 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    dedicacio: float
+    capacity: float
     role: RolEnum
 
 

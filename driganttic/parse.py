@@ -76,7 +76,7 @@ def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceD
 
     Returns: task Details Pydantic.
     """
-    n_interest_fields = {"Max dedicació facturable": "dedicacio"}
+    n_interest_fields = {"Max dedicació facturable": "capacity"}
     c_interest_fields = {"Role": "role"}
     # TODO: This is terrible, but invovles
     #  changing the datafield definition
