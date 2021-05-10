@@ -57,7 +57,7 @@ def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
 
     Returns: Resource Details Pydantic.
     """
-    n_interest_fields = {"isBillable": "isBillable"}
+    c_interest_fields = {"isBillable": "isBillable"}
     res = response.copy()
     start = parse_timestamp(response.get("start"))
     if start is not None:
@@ -65,13 +65,13 @@ def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     end = parse_timestamp(response.get("end"))
     if end is not None:
         res["end"] = end
-    # parse numbers
-    nv = response.get("dataFields", {}).get("numbers", [])
-    if nv:
-        for k, v in n_interest_fields.items():
-            val = get_number(nv, k, Translator.numbers)
-            if val is not None:
-                res[v] = val
+    # parse cats
+    lv = response.get("dataFields", {}).get("listValues", [])
+    if lv:
+        for k, v in c_interest_fields.items():
+            val2 = get_category(lv, k, Translator.listValues)
+            if val2 is not None:
+                res[v] = val2
     return TaskDetails(**res)
 
 
