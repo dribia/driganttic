@@ -85,7 +85,7 @@ class TaskDetails(FetcherDetails):
     start: datetime.datetime
     end: datetime.datetime
     utilizationPercent: Optional[float]
-    is_billable: Optional[bool]
+    isBillable: Optional[bool]
 
 
 class ProjectDetails(FetcherDetails):

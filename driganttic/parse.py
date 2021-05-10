@@ -57,7 +57,7 @@ def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
 
     Returns: Resource Details Pydantic.
     """
-    n_interest_fields = {"is_billable": "is_billable"}
+    n_interest_fields = {"isBillable": "isBillable"}
     res = response.copy()
     start = parse_timestamp(response.get("start"))
     if start is not None:
