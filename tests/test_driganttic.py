@@ -32,6 +32,8 @@ def test_GantticClient():
     the code is less legible but it iterates the entire
     test with a for loop. Note the test only checks the m
     ethods to work, data validation is made by pyndatinc.
+
+    Separate tests should be made on the data.
     """
     Client = dri_client.GantticClient(APIKEY=APIKEY)
 
