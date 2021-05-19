@@ -172,7 +172,7 @@ def _fetcherlist(
 
 
 def _refine_tasklist(response: Dict, Translator=DataFields) -> TaskList:
-    """Parse the task response.
+    """Parse the tasklist response.
 
     Args:
         response: Ganttic API response
@@ -184,7 +184,7 @@ def _refine_tasklist(response: Dict, Translator=DataFields) -> TaskList:
 
 
 def _refine_resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
-    """Parse the resource response.
+    """Parse the resource list response.
 
     Args:
         response: Ganttic API response
@@ -196,7 +196,7 @@ def _refine_resourcelist(response: Dict, Translator=DataFields) -> ResourceList:
 
 
 def _refine_projectlist(response: Dict, Translator=DataFields) -> ProjectList:
-    """Parse the project response.
+    """Parse the project list response.
 
     Args:
         response: Ganttic API response
