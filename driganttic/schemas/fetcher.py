@@ -20,7 +20,7 @@ class ErrorMessage(str, Enum):
 
 
 class ServiceEnum(str, Enum):
-    """Standard Enum."""
+    """Service Enum."""
 
     projecte = "Projecte"
     manteniment = "Manteniment"
@@ -29,8 +29,8 @@ class ServiceEnum(str, Enum):
     peed = "PEED"
 
 
-class RolEnum(str, Enum):
-    """Standard Enum."""
+class RoleEnum(str, Enum):
+    """Role Enum."""
 
     soci = "Soci"
     bd = "BD"
@@ -39,7 +39,7 @@ class RolEnum(str, Enum):
 
 
 class ScenarioEnum(str, Enum):
-    """Standard Enum."""
+    """Scenario Enum."""
 
     esperat = "Esperat"
     optimista = "Optimista"
@@ -73,7 +73,7 @@ class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
     capacity: float
-    role: RolEnum
+    role: RoleEnum
 
 
 class TaskDetails(FetcherDetails):
@@ -98,10 +98,6 @@ class ProjectDetails(FetcherDetails):
     service: ServiceEnum
     scenario: ScenarioEnum
     sprints: Optional[float]
-
-
-# Note: We are adding a method here and this is not totally clean,
-# but it's handy, because managing datafields is messy.
 
 
 class DataFieldsEnum(str, Enum):
