@@ -4,8 +4,6 @@ Exceptions:
 - TODO: To write
 
 Functions (all are methods within the class):
-- [Get] list: Task, Resource, Project
-- [Get] details of list element: Task, Resource, Project
 - TODO: [Post] create something: Task, Resource, Project.
 - TODO: [post] edit something: Task, Resource, Project
 
@@ -68,7 +66,7 @@ class GantticClient:
     ):
         """Custom Ganttic API Client.
 
-        We implement standard methods.
+        We implement standard GET methods.
 
         Args:
             APIKEY: Api key
@@ -91,7 +89,7 @@ class GantticClient:
         datafields=False,
         **kwargs,
     ) -> requests.Response:
-        """Main method for GEt requests.
+        """Main unified method for GET requests.
 
         Args:
             fetcher_name: One of either task, resource or project
@@ -123,7 +121,7 @@ class GantticClient:
             return session.get(req_string, params=kwargs, headers=headers)
 
     def _get_datafields(self, fetcher_name: str) -> DataFields:
-        """Gets datafields ID-valueID translation."""
+        """Gets datafields ID-valueID translation for custom fields."""
         return parse._datafields(
             self._get_fetcher(fetcher_name, datafields=True).json()
         )
@@ -146,7 +144,7 @@ class GantticClient:
         raise NotImplementedError("TBD")
 
     def _exhaust_pages(self, *args, **kwargs) -> Dict:
-        """Exhaust pages from API."""
+        """Exhaust pages from API GET call."""
         rnew = self._get_fetcher(*args, **kwargs).json()
         rfinal = rnew.copy()
         while rnew["page"] < rnew["pageCount"]:
@@ -158,7 +156,7 @@ class GantticClient:
     def get_tasks(
         self, timeMin: datetime.datetime, timeMax: datetime.datetime, **kwargs
     ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
-        """Gets stuff."""
+        """Gets tasks."""
         return parse._fetcherlist(
             self._exhaust_pages(
                 "task",
@@ -173,7 +171,7 @@ class GantticClient:
     def get_projects(
         self, **kwargs
     ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
-        """Gets stuff."""
+        """Gets projects."""
         return parse._fetcherlist(
             self._exhaust_pages("project", **kwargs),
             "project",
@@ -183,7 +181,7 @@ class GantticClient:
     def get_resources(
         self, **kwargs
     ) -> Union[FetcherList, TaskList, ResourceList, ProjectList]:
-        """Gets stuff."""
+        """Gets resources."""
         return parse._fetcherlist(
             self._exhaust_pages("resource", **kwargs),
             "resource",
@@ -193,7 +191,7 @@ class GantticClient:
     def get_task_details(
         self, taskId: str, **kwargs
     ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
-        """Gets stuff."""
+        """Gets details from task."""
         return parse._fetcherdetails(
             self._get_fetcher("task", fetcher_detail_id=taskId, **kwargs).json(),
             "task",
@@ -203,7 +201,7 @@ class GantticClient:
     def get_resource_details(
         self, resourceId: str, **kwargs
     ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
-        """Gets detailed stuff."""
+        """Gets details from resource."""
         return parse._fetcherdetails(
             self._get_fetcher(
                 "resource", fetcher_detail_id=resourceId, **kwargs
@@ -215,7 +213,7 @@ class GantticClient:
     def get_project_details(
         self, projectId: str, **kwargs
     ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
-        """Gets detailed stuff."""
+        """Gets details from project."""
         return parse._fetcherdetails(
             self._get_fetcher("project", fetcher_detail_id=projectId, **kwargs).json(),
             "project",
@@ -223,7 +221,7 @@ class GantticClient:
         )
 
     def create_task(self, TaskData: TaskDetails):
-        """Creates detailed stuff."""
+        """Creates detailed task."""
         return self._create_detailed("task", TaskData)
 
     def modify_task(self, taskId: str, TaskData: TaskDetails):

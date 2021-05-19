@@ -73,7 +73,7 @@ one_project = Client.get_project_details(projectId=p_id)
 one_task = Client.get_task_details(taskId=t_id)
 one_resource = Client.get_resource_details(resourceId=r_id)
 ```
-All results are pydantic models already formatted with the interesting fields.
+All results are [pydantic models](https://pydantic-docs.helpmanual.io/) already formatted with the interesting fields.
 See the `fetcher.py` file in `/schemas` for details.
 
 ## Modifications
@@ -82,9 +82,12 @@ The only changes needed here are to adapt to your own custom data fields.
 To do so, you need to do two things:
 
 1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
-2. Define the relevant parsing methods in `parse.py`, only for the fields that are not general. The rest of fields are taken care by `_fetcher` or `_fetcherDetails` methods.
+2. Define the relevant parsing methods in `parse.py`, only for the fields that are not general. The rest of fields are taken care by `_refine` methods.
 
+!!! tip
+    Make sure to use the functions `get_number`, `get_date`, `get_category` to fetch the custom datafields defined.
 
 ## TODOs
 
 - [ ] Implement modify, create and delete methods
+- [ ] Implement mocking of the API for good tests (current tests are not **acceptably good**)
