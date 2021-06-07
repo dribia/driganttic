@@ -1,3 +1,6 @@
+
+**Important note: This repo is still WiP, it is missing a license and the adaptation of the Docs to be fully public. For the moment, its (c) Dribia Data Research 2021 all rights reserved, soon to be MIT**.
+
 # driganttic
 
 [![Build](https://bitbucket.org/dribia_team/badges/downloads/status_driganttic.svg)](https://bitbucket.org/dribia_team/driganttic/addon/pipelines/home)
