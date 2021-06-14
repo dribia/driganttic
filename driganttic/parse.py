@@ -58,10 +58,20 @@ CUSTOM_FIELDS = {
 
 # TODO: Probably can simplify return types
 def _fetcherdetails(
-    response: Dict, resource_name: str, Translator: DataFields
+    response: Dict, resource_name: str, Translator: DataFields,
+    custom_fields : Dict = CUSTOM_FIELDS
 ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
+    # parse custom details
+    # Here pass your custom fields
+    for k_c,v_c in custom_fields.get(resource_name,{}).items():
+        lv = response.get("dataFields", {}).get(k_c, [])
+        if lv:
+            for k, v in v_c.items():
+                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
+                if val2 is not None:
+                    res[v] = val2
     created = parse_timestamp(response.get("created"))
     if created is not None:
         res["created"] = created
@@ -71,13 +81,12 @@ def _fetcherdetails(
         return DETAIL_PARSERS[resource_name](res, Translator)
 
 
-def _refine_taskdetails(response: Dict, Translator: DataFields, custom_task_fields: Dict = CUSTOM_FIELDS.get('task',{})) -> TaskDetails:
+def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     """Parse the task details response.
 
     Args:
         response: Ganttic API response
         Translator: Description of task fields
-        custom_task_fields: custom fields to parse
 
     Returns: Resource Details Pydantic.
     """
@@ -88,58 +97,34 @@ def _refine_taskdetails(response: Dict, Translator: DataFields, custom_task_fiel
     end = parse_timestamp(response.get("end"))
     if end is not None:
         res["end"] = end
-    # Here pass your custom fields
-    for k_c,v_c in custom_task_fields.items():
-        lv = response.get("dataFields", {}).get(k_c, [])
-        if lv:
-            for k, v in v_c.items():
-                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
-                if val2 is not None:
-                    res[v] = val2
     return TaskDetails(**res)
 
 
-def _refine_resourcedetails(response: Dict, Translator: DataFields, custom_resource_fields: Dict = CUSTOM_FIELDS.get('resource',{})) -> ResourceDetails:
+def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
     """Parse the resource details response.
 
     Args:
         response: Ganttic API response
         Translator: Description of  fields
-        custom_resource_fields: custom fields to parse
 
     Returns: task Details Pydantic.
     """
     res = response.copy()
-    # Here pass your custom fields
-    for k_c,v_c in custom_resource_fields.items():
-        lv = response.get("dataFields", {}).get(k_c, [])
-        if lv:
-            for k, v in v_c.items():
-                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
-                if val2 is not None:
-                    res[v] = val2
+    # custom parsing
     return ResourceDetails(**res)
 
 
-def _refine_projectdetails(response: Dict, Translator: DataFields, custom_project_fields: Dict = CUSTOM_FIELDS.get('project',{})) -> ProjectDetails:
+def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
     """Parse the project details response.
 
     Args:
         response: Ganttic API response
         Translator: Pydantic Translator model
-        custom_project_fields: custom fields to parse
 
     Returns: project Details Pydantic.
     """
     res = response.copy()
-    # Here pass your custom fields
-    for k_c,v_c in custom_project_fields.items():
-        lv = response.get("dataFields", {}).get(k_c, [])
-        if lv:
-            for k, v in v_c.items():
-                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
-                if val2 is not None:
-                    res[v] = val2
+    # custom parsing
     return ProjectDetails(**res)
 
 
