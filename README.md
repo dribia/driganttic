@@ -68,6 +68,8 @@ To do so, you need to do two things:
 
 ## TODOs
 
+- [ ] Better docs on limitations (pagination, custom fields, not implemented fields)
+- [ ] Move all custom related field definition to configuration yaml file
 - [ ] Implement good testing, in line with [driplaces](https://bitbucket.org/dribia_team/driplaces/src/master/tests/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
 - [ ] Implement custom data types texts and users

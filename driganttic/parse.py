@@ -131,6 +131,8 @@ def _refine_projectdetails(response: Dict, Translator: DataFields, custom_projec
 
     Returns: project Details Pydantic.
     """
+    res = response.copy()
+    # Here pass your custom fields
     for k_c,v_c in custom_project_fields.items():
         lv = response.get("dataFields", {}).get(k_c, [])
         if lv:
