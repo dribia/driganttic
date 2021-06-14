@@ -1,5 +1,4 @@
 
-**Important note: This repo is still WiP, it is missing a license and the adaptation of the Docs to be fully public. For the moment, its (c) Dribia Data Research 2021 all rights reserved, soon to be MIT**.
 
 # driganttic
 
@@ -12,9 +11,9 @@
 
 ---
 
-**Documentation**: [https://docs.dribia.dev/driganttic](https://docs.dribia.dev/driganttic)
+**Documentation**: [https://dribia.github.io/driganttic/](https://dribia.github.io/driganttic/)
 
-**Source Code**: [https://bitbucket.org/dribia_team/driganttic](https://bitbucket.org/dribia_team/driganttic)
+**Source Code**: [https://github.com/Dribia/driganttic](https://github.com/Dribia/driganttic)
 
 ---
 
@@ -25,11 +24,15 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 * Client simple programmatic access to Ganttic API Rest
 * Pydantic responses
 
+## Missing features
+
+* It only implements GET methods
+* It does not implement all fields of Tasks, Resources and Projects as they were not needed to us
+* It does not implement custom field fetchers for either texts or users
+
 ## Example
 
-**Warning: It may not works with badly formatted tasks from past usages of ganttic. Use from 2021 onwards!**
-
-The client is very trivial to use. It implement wrappers to the main types of available calls.
+The client is very trivial to use. It implements wrappers to the main types of available calls.
 ```python
 from driganttic import parse as dg_parse
 from driganttic import client as dg_client
@@ -54,6 +57,7 @@ one_project = Client.get_project_details(projectId=p_id)
 one_task = Client.get_task_details(taskId=t_id)
 one_resource = Client.get_resource_details(resourceId=r_id)
 ```
+
 All results are pydantic models already formatted with the interesting fields.
 See the `fetcher.py` file in `/schemas` for details.
 
@@ -63,7 +67,29 @@ The only changes needed here are to adapt to your own custom data fields.
 To do so, you need to do two things:
 
 1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
-2. Define the relevant parsing methods in `parse.py`, only for the fields that are not general. The rest of fields are taken care by `_fetcher` or `_fetcherDetails` methods.
+2. Head to `parse.py` and add your declared custom fields under the `CUSTOM_FIELDS` dict 
+   for the relevant fetcher (task, project or resource) and type (number, date, listvalue, user or text)
+
+```python
+CUSTOM_FIELDS = {
+    'task' : {
+        # define pairs of name in the dict, one for the pydantic and one for the ganttic name
+        'listValues' : {'my_custom_pydantic_name_field':¡'my_custom_ganttic_field_name'},
+        'numbers': {},
+        'dates': {},
+    },
+    'resource' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+    'project' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+}
+```
 
 
 ## TODOs
