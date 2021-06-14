@@ -1,5 +1,5 @@
 <p style="text-align: center; padding-bottom: 1rem;">
-    <a href="https://docs.dribia.dev">
+    <a href="https://dribia.github.io/driganttic/">
         <img 
             src="img/logo_dribia_blau_cropped.png" 
             alt="driganttic" 
@@ -29,10 +29,10 @@
 
 ---
 
-**Documentation**: <a href="https://docs.dribia.dev/driganttic" target="_blank">https://docs.dribia.dev/driganttic</a>
+**Documentation**: <a href="https://dribia.github.io/driganttic/" target="_blank">https://dribia.github.io/driganttic/</a>
 
-**Source Code**: <a href="https://bitbucket.org/dribia_team/driganttic" target="_blank">
-https://bitbucket.org/dribia_team/driganttic</a>
+**Source Code**: <a href="https://github.com/Dribia/driganttic" target="_blank">
+https://github.com/Dribia/driganttic</a>
 
 ---
 
@@ -43,10 +43,15 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 * Client simple programmatic access to Ganttic API Rest
 * Pydantic responses
 
-## Example
 
-!!! danger
-    It may not work with badly formatted tasks from past usages of ganttic. Use from 2021 onwards!
+!!! warning
+    Some relevant features are missing, because they were not relevant for our usecase.
+        * It only implements GET methods
+        * It does not implement all fields of Tasks, Resources and Projects as they were not needed to us
+        * It does not implement custom field fetchers for either texts or users
+
+
+## Example
 
 The client is very trivial to use. It implement wrappers to the main types of available calls.
 ```python
@@ -82,12 +87,40 @@ The only changes needed here are to adapt to your own custom data fields.
 To do so, you need to do two things:
 
 1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
-2. Define the relevant parsing methods in `parse.py`, only for the fields that are not general. The rest of fields are taken care by `_refine` methods.
+2. Head to `parse.py` and add your declared custom fields under the `CUSTOM_FIELDS` dict 
+   for the relevant fetcher (task, project or resource) and type (number, date, listvalue, user or text)
+
+```python
+CUSTOM_FIELDS = {
+    'task' : {
+        # define pairs of name in the dict, one for the pydantic and one for the ganttic name
+        'listValues' : {'my_custom_pydantic_name_field':¡'my_custom_ganttic_field_name'},
+        'numbers': {},
+        'dates': {},
+    },
+    'resource' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+    'project' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+}
+```
 
 !!! tip
-    Make sure to use the functions `get_number`, `get_date`, `get_category` to fetch the custom datafields defined.
+    Make sure to pass as dictionaries the pairs ganttic names vs pydantic names in 
+the apropriate order.
+
 
 ## TODOs
 
+- [ ] Better docs on limitations (pagination, custom fields, not implemented fields)
+- [ ] Move all custom related field definition to configuration yaml file
+- [ ] Make optional to exhaust pages (now by default it exhausts the pages)
+- [ ] Implement good testing, in line using TestClient from [Starlette](https://fastapi.tiangolo.com/tutorial/testing/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
-- [ ] Implement mocking of the API for good tests (current tests are not **acceptably good**)
+- [ ] Implement custom data types texts and users
