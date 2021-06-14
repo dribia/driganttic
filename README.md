@@ -70,3 +70,5 @@ To do so, you need to do two things:
 
 - [ ] Implement good testing, in line with [driplaces](https://bitbucket.org/dribia_team/driplaces/src/master/tests/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
+- [ ] Implement custom data types texts and users
+- [ ] Make optional to exhaust pages (now by default it exhausts the pages)

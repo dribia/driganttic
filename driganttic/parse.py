@@ -32,6 +32,29 @@ from driganttic.schemas.fetcher import (
     TaskList,
 )
 
+# TODO: Move to conf file or something
+
+# Define here your custom types, with the mapping from their ganttic names
+# to their pydantic names in the file fetcher.py
+CUSTOM_FIELDS = {
+    'task' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+    'resource' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+    'project' : {
+        'listValues' : {},
+        'numbers': {},
+        'dates': {},
+    },
+}
+
+
 
 # TODO: Probably can simplify return types
 def _fetcherdetails(
@@ -48,16 +71,16 @@ def _fetcherdetails(
         return DETAIL_PARSERS[resource_name](res, Translator)
 
 
-def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
+def _refine_taskdetails(response: Dict, Translator: DataFields, custom_task_fields: Dict = CUSTOM_FIELDS.get('task',{})) -> TaskDetails:
     """Parse the task details response.
 
     Args:
         response: Ganttic API response
         Translator: Description of task fields
+        custom_task_fields: custom fields to parse
 
     Returns: Resource Details Pydantic.
     """
-    c_interest_fields = {"isBillable": "isBillable"}
     res = response.copy()
     start = parse_timestamp(response.get("start"))
     if start is not None:
@@ -65,90 +88,56 @@ def _refine_taskdetails(response: Dict, Translator: DataFields) -> TaskDetails:
     end = parse_timestamp(response.get("end"))
     if end is not None:
         res["end"] = end
-    # parse cats
-    lv = response.get("dataFields", {}).get("listValues", [])
-    if lv:
-        for k, v in c_interest_fields.items():
-            val2 = get_category(lv, k, Translator.listValues)
-            if val2 is not None:
-                res[v] = val2
+    # Here pass your custom fields
+    for k_c,v_c in custom_task_fields.items():
+        lv = response.get("dataFields", {}).get(k_c, [])
+        if lv:
+            for k, v in v_c.items():
+                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
+                if val2 is not None:
+                    res[v] = val2
     return TaskDetails(**res)
 
 
-def _refine_resourcedetails(response: Dict, Translator: DataFields) -> ResourceDetails:
+def _refine_resourcedetails(response: Dict, Translator: DataFields, custom_resource_fields: Dict = CUSTOM_FIELDS.get('resource',{})) -> ResourceDetails:
     """Parse the resource details response.
 
     Args:
         response: Ganttic API response
         Translator: Description of  fields
+        custom_resource_fields: custom fields to parse
 
     Returns: task Details Pydantic.
     """
-    n_interest_fields = {"Max dedicació facturable": "capacity"}
-    c_interest_fields = {"Role": "role"}
-    # TODO: This is terrible, but invovles
-    #  changing the datafield definition
-    # TODO Fix this, parsing is hellish!
     res = response.copy()
-    # parse numbers
-    nv = response.get("dataFields", {}).get("numbers", [])
-    if nv:
-        for k, v in n_interest_fields.items():
-            val = get_number(nv, k, Translator.numbers)
-            if val is not None:
-                res[v] = val
-    # parse cats
-    lv = response.get("dataFields", {}).get("listValues", [])
-    if lv:
-        for k, v in c_interest_fields.items():
-            val2 = get_category(lv, k, Translator.listValues)
-            if val2 is not None:
-                res[v] = val2
+    # Here pass your custom fields
+    for k_c,v_c in custom_resource_fields.items():
+        lv = response.get("dataFields", {}).get(k_c, [])
+        if lv:
+            for k, v in v_c.items():
+                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
+                if val2 is not None:
+                    res[v] = val2
     return ResourceDetails(**res)
 
 
-def _refine_projectdetails(response: Dict, Translator: DataFields) -> ProjectDetails:
+def _refine_projectdetails(response: Dict, Translator: DataFields, custom_project_fields: Dict = CUSTOM_FIELDS.get('project',{})) -> ProjectDetails:
     """Parse the project details response.
 
     Args:
         response: Ganttic API response
         Translator: Pydantic Translator model
+        custom_project_fields: custom fields to parse
 
     Returns: project Details Pydantic.
     """
-    n_interest_fields = {
-        "Equip": "team",
-        "Probabilitat": "probability",
-        "Sprints": "sprints",
-        "Descompte": "discount",
-    }
-    c_interest_fields = {"Tipus": "service", "Escenari": "scenario"}
-    d_interest_fields = {"Data aproximada d'inici": "dateAproxStart"}
-    # TODO: This is terrible, but invovles
-    #  changing the datafield definition
-    # TODO Fix this, parsing is hellish!
-    res = response.copy()
-    # parse dates
-    dv = response.get("dataFields", {}).get("dates", [])
-    if dv:
-        for k, v in d_interest_fields.items():
-            val = get_date(dv, k, Translator.dates)
-            if val is not None:
-                res[v] = val
-    # parse numbers
-    nv = response.get("dataFields", {}).get("numbers", [])
-    if nv:
-        for k, v in n_interest_fields.items():
-            val2 = get_number(nv, k, Translator.numbers)
-            if val2 is not None:
-                res[v] = val2
-    # parse cats
-    lv = response.get("dataFields", {}).get("listValues", [])
-    if lv:
-        for k, v in c_interest_fields.items():
-            val3 = get_category(lv, k, Translator.listValues)
-            if val3 is not None:
-                res[v] = val3
+    for k_c,v_c in custom_project_fields.items():
+        lv = response.get("dataFields", {}).get(k_c, [])
+        if lv:
+            for k, v in v_c.items():
+                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
+                if val2 is not None:
+                    res[v] = val2
     return ProjectDetails(**res)
 
 
@@ -248,6 +237,10 @@ LIST_PARSERS: Dict[str, Callable] = {
     "project": _refine_projectlist,
 }
 
+
+
+
+
 # TODO: Evaluate if a better dependency
 #  can be used on none_type (it's only to define NAT)
 
@@ -306,3 +299,21 @@ def get_category(listitems: List, item_name: str, Translator_field: Dict) -> Any
             return None
     else:
         raise NameError("No such item name in Translator")
+
+def get_user() -> Any:
+    """Gets user from translator by name."""
+    raise NotImplementedError('Not implemented')
+
+def get_text() -> Any:
+    """Gets text from translator by name."""
+    raise NotImplementedError('Not implemented')
+
+
+
+GET_FIELDS = {
+    'listValues': get_category,
+    'numbers': get_number,
+    'dates': get_date,
+    'texts': get_text,
+    'users': get_user
+}
