@@ -70,7 +70,7 @@ To do so, you need to do two things:
 
 - [ ] Better docs on limitations (pagination, custom fields, not implemented fields)
 - [ ] Move all custom related field definition to configuration yaml file
-- [ ] Implement good testing, in line with [driplaces](https://bitbucket.org/dribia_team/driplaces/src/master/tests/) by mocking the API response.
+- [ ] Make optional to exhaust pages (now by default it exhausts the pages)
+- [ ] Implement good testing, in line using TestClient from [Starlette](https://fastapi.tiangolo.com/tutorial/testing/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
 - [ ] Implement custom data types texts and users
-- [ ] Make optional to exhaust pages (now by default it exhausts the pages)
