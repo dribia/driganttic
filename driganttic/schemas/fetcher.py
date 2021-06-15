@@ -19,7 +19,6 @@ class ErrorMessage(str, Enum):
 # Enums
 
 
-
 class FetcherDetails(Base):
     """Fetcher Details schema.
 
@@ -46,7 +45,6 @@ class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
     # Define here your custom fields
-
 
 
 class TaskDetails(FetcherDetails):
