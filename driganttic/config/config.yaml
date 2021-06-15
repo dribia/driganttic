@@ -1,23 +1,13 @@
 custom_fields:
-  task:
+  tasks:
     listValues:
-      isBillable: isBillable
     numbers:
     dates:
-  resource:
+  projects:
     listValues:
-      Role: role
     numbers:
-      Max dedicació facturable: capacity
     dates:
-  project:
+  resources:
     listValues:
-      tipus: service
-      Escenari: scenario
     numbers:
-      Equip: team
-      Probabilitat: probability
-      Sprints: sprints
-      Descompte: discount
     dates:
-      Data aproximada d'inici: dateAproxStart

@@ -18,6 +18,7 @@ import datetime
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import dateparser
+import yaml
 
 # Internal modules
 from driganttic.schemas.fetcher import (
@@ -32,28 +33,11 @@ from driganttic.schemas.fetcher import (
     TaskList,
 )
 
-# TODO: Move to conf file or something
-
-# Define here your custom types, with the mapping from their
-# ganttic names to their pydantic names in the
-# file fetcher.py
-CUSTOM_FIELDS: Dict = {
-    "task": {
-        "listValues": {},
-        "numbers": {},
-        "dates": {},
-    },
-    "resource": {
-        "listValues": {},
-        "numbers": {},
-        "dates": {},
-    },
-    "project": {
-        "listValues": {},
-        "numbers": {},
-        "dates": {},
-    },
-}
+try:
+    with open("driganttic/config/config.yaml", "r") as f:
+        CUSTOM_FIELDS = yaml.load(f, Loader=yaml.FullLoader).get("custom_fields", {})
+except FileNotFoundError:
+    CUSTOM_FIELDS = {}
 
 
 # TODO: Probably can simplify return types
