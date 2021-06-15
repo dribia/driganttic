@@ -34,38 +34,40 @@ from driganttic.schemas.fetcher import (
 
 # TODO: Move to conf file or something
 
-# Define here your custom types, with the mapping from their ganttic names
-# to their pydantic names in the file fetcher.py
-CUSTOM_FIELDS = {
-    'task' : {
-        'listValues' : {},
-        'numbers': {},
-        'dates': {},
+# Define here your custom types, with the mapping from their
+# ganttic names to their pydantic names in the
+# file fetcher.py
+CUSTOM_FIELDS: Dict = {
+    "task": {
+        "listValues": {},
+        "numbers": {},
+        "dates": {},
     },
-    'resource' : {
-        'listValues' : {},
-        'numbers': {},
-        'dates': {},
+    "resource": {
+        "listValues": {},
+        "numbers": {},
+        "dates": {},
     },
-    'project' : {
-        'listValues' : {},
-        'numbers': {},
-        'dates': {},
+    "project": {
+        "listValues": {},
+        "numbers": {},
+        "dates": {},
     },
 }
 
 
-
 # TODO: Probably can simplify return types
 def _fetcherdetails(
-    response: Dict, resource_name: str, Translator: DataFields,
-    custom_fields : Dict = CUSTOM_FIELDS
+    response: Dict,
+    resource_name: str,
+    Translator: DataFields,
+    custom_fields: Dict = CUSTOM_FIELDS,
 ) -> Union[FetcherDetails, TaskDetails, ResourceDetails, ProjectDetails]:
     """Parse the fetcher details."""
     res = response.copy()
     # parse custom details
     # Here pass your custom fields
-    for k_c,v_c in custom_fields.get(resource_name,{}).items():
+    for k_c, v_c in custom_fields.get(resource_name, {}).items():
         lv = response.get("dataFields", {}).get(k_c, [])
         if lv:
             for k, v in v_c.items():
@@ -225,9 +227,6 @@ LIST_PARSERS: Dict[str, Callable] = {
 }
 
 
-
-
-
 # TODO: Evaluate if a better dependency
 #  can be used on none_type (it's only to define NAT)
 
@@ -287,20 +286,21 @@ def get_category(listitems: List, item_name: str, Translator_field: Dict) -> Any
     else:
         raise NameError("No such item name in Translator")
 
+
 def get_user() -> Any:
     """Gets user from translator by name."""
-    raise NotImplementedError('Not implemented')
+    raise NotImplementedError("Not implemented")
+
 
 def get_text() -> Any:
     """Gets text from translator by name."""
-    raise NotImplementedError('Not implemented')
+    raise NotImplementedError("Not implemented")
 
 
-
-GET_FIELDS = {
-    'listValues': get_category,
-    'numbers': get_number,
-    'dates': get_date,
-    'texts': get_text,
-    'users': get_user
+GET_FIELDS: Dict[str, Callable] = {
+    "listValues": get_category,
+    "numbers": get_number,
+    "dates": get_date,
+    "texts": get_text,
+    "users": get_user,
 }
