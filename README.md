@@ -103,10 +103,12 @@ custom_fields:
 ```
 
 
+## License
+
+This package is licensed under the MIT license, see `LICENSE.md`.
+
 ## TODOs
 
-- [ ] Better docs on limitations (pagination, custom fields, not implemented fields)
-- [ ] Move all custom related field definition to configuration yaml file
 - [ ] Make optional to exhaust pages (now by default it exhausts the pages)
 - [ ] Implement good testing, in line using TestClient from [Starlette](https://fastapi.tiangolo.com/tutorial/testing/) by mocking the API response.
 - [ ] Implement modify, create and delete methods
