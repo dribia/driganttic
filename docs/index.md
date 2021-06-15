@@ -95,7 +95,7 @@ To do so, you need to do two things:
 CUSTOM_FIELDS = {
     'task' : {
         # define pairs of name in the dict, one for the pydantic and one for the ganttic name
-        'listValues' : {'my_custom_pydantic_name_field':¡'my_custom_ganttic_field_name'},
+        'listValues' : {'my_ganttic_custom_name':¡'my_pydantic_name'},
         'numbers': {},
         'dates': {},
     },
