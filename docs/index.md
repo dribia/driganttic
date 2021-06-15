@@ -46,9 +46,10 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 !!! warning
     Some relevant features are missing, because they were not relevant for our usecase.
-        * It only implements GET methods
-        * It does not implement all fields of Tasks, Resources and Projects as they were not needed to us
-        * It does not implement custom field fetchers for either texts or users
+        
+    * It only implements GET methods
+    * It does not implement all fields of Tasks, Resources and Projects as they were not needed to us
+    * It does not implement custom field fetchers for either texts or users
 
 
 ## Example

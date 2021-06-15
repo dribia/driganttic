@@ -10,7 +10,7 @@ theme:
   logo: img/logo_dribia_d_blanc.png
 repo_name: dribia_team/driganttic
 repo_url: https://github.com/Dribia/driganttic
-edit_uri: https://github.com/Dribia/driganttic
+edit_uri:
 nav:
   - driganttic: index.md
   - Install: install.md
