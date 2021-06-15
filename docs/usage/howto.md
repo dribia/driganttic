@@ -41,12 +41,45 @@ one_resource = Client.get_resource_details(resourceId=r_id)
 
 Say you want to extend the client to your needs. There are some simple steps to follow.
 
-1. Head to `/driganttic/fetcher.py` and edit the relevant [pydantic models](https://pydantic-docs.helpmanual.io/) to your needs. You can add there data validation, data types and optional types.
-2. Head to `/driganttic/parse.py` and edit the `CUSTOM_FIELDS` dictionary with your speciffic custom data types.
-3. Head to `/driganttic/tests/` and add the relevant tests for the defined data fields.
+The only changes needed here are to adapt to your own custom data fields.
+To do so, you need to do two things:
 
-!!! tip
-    Make sure to use the auxiliary functions `parse_timestamp` and `get_Y` (with `Y` being category, number or date) to handle the custom defined datafields.
+1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
+```python
+
+class TaskDetails(FetcherDetails):
+    """Task List schema."""
+
+    # could be holidays
+    projectId: Optional[str]
+    resources: List[str]
+    start: datetime.datetime
+    end: datetime.datetime
+    utilizationPercent: Optional[float]
+
+    # Define here your custom fields
+    my_custom_pydantic_name: Optional[str]
+```
+2. Head to `config/config.yaml` and add your declared custom fields under the dict 
+   for the relevant fetcher (task, project or resource) and type (number, date, listvalue, user or text)
+
+```yaml
+custom_fields:
+  tasks:
+    listValues:
+       my_custom_ganttic_name: my_pydnatic_name
+    numbers:
+    dates:
+  projects:
+    listValues:
+    numbers:
+    dates:
+  resources:
+    listValues:
+    numbers:
+    dates:
+```
+
 
 !!! warning
-    Custom `text` and `userfields` are currently not supported.
+    Custom `text` and `user` fields are currently not supported.
