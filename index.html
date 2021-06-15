@@ -246,6 +246,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#todos" class="md-nav__link">
     TODOs
   </a>
@@ -377,6 +384,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#todos" class="md-nav__link">
     TODOs
   </a>
@@ -485,38 +499,64 @@ See the <code>fetcher.py</code> file in <code>/schemas</code> for details.</p>
 <p>The only changes needed here are to adapt to your own custom data fields.
 To do so, you need to do two things:</p>
 <ol>
-<li>Define the relevant fields in the pydantic model definition in <code>schemas/fetcher.py</code></li>
-<li>Head to <code>parse.py</code> and add your declared custom fields under the <code>CUSTOM_FIELDS</code> dict 
+<li>Define the relevant fields in the pydantic model definition in <code>schemas/fetcher.py</code>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">TaskDetails</span><span class="p">(</span><span class="n">FetcherDetails</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Task List schema.&quot;&quot;&quot;</span>
+
+    <span class="c1"># could be holidays</span>
+    <span class="n">projectId</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">resources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="n">end</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="n">utilizationPercent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+    <span class="c1"># Define here your custom fields</span>
+    <span class="n">my_custom_pydantic_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</code></pre></div></li>
+<li>Head to <code>config/config.yaml</code> and add your declared custom fields under the dict 
    for the relevant fetcher (task, project or resource) and type (number, date, listvalue, user or text)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;task&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="c1"># define pairs of name in the dict, one for the pydantic and one for the ganttic name</span>
-        <span class="s1">&#39;listValues&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;my_custom_pydantic_name_field&#39;</span><span class="p">:</span><span class="err">¡</span><span class="s1">&#39;my_custom_ganttic_field_name&#39;</span><span class="p">},</span>
-        <span class="s1">&#39;numbers&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;dates&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;resource&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;listValues&#39;</span> <span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;numbers&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;dates&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;project&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;listValues&#39;</span> <span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;numbers&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;dates&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="p">},</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="nt">custom_fields</span><span class="p">:</span>
+  <span class="nt">tasks</span><span class="p">:</span>
+    <span class="nt">listValues</span><span class="p">:</span>
+       <span class="nt">my_custom_ganttic_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my_pydnatic_name</span>
+    <span class="nt">numbers</span><span class="p">:</span>
+    <span class="nt">dates</span><span class="p">:</span>
+  <span class="nt">projects</span><span class="p">:</span>
+    <span class="nt">listValues</span><span class="p">:</span>
+    <span class="nt">numbers</span><span class="p">:</span>
+    <span class="nt">dates</span><span class="p">:</span>
+  <span class="nt">resources</span><span class="p">:</span>
+    <span class="nt">listValues</span><span class="p">:</span>
+    <span class="nt">numbers</span><span class="p">:</span>
+    <span class="nt">dates</span><span class="p">:</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Make sure to pass as dictionaries the pairs ganttic names vs pydantic names in </p>
+<p>Make sure to pass as dictionaries the pairs ganttic names vs pydantic names in 
+the appropriate order.</p>
 </div>
-<p>the apropriate order.</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">🔗</a></h2>
+<p>This software is licensed under the MIT license.</p>
+<p>MIT License</p>
+<p>Copyright (c) 2021 Dribia Data Research</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
 <h2 id="todos">TODOs<a class="headerlink" href="#todos" title="Permanent link">🔗</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Better docs on limitations (pagination, custom fields, not implemented fields)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Move all custom related field definition to configuration yaml file</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Make optional to exhaust pages (now by default it exhausts the pages)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement good testing, in line using TestClient from <a href="https://fastapi.tiangolo.com/tutorial/testing/">Starlette</a> by mocking the API response.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement modify, create and delete methods</li>
