@@ -1,0 +1,13 @@
+custom_fields:
+  tasks:
+    listValues:
+    numbers:
+    dates:
+  projects:
+    listValues:
+    numbers:
+    dates:
+  resources:
+    listValues:
+    numbers:
+    dates:

@@ -88,33 +88,44 @@ The only changes needed here are to adapt to your own custom data fields.
 To do so, you need to do two things:
 
 1. Define the relevant fields in the pydantic model definition in `schemas/fetcher.py`
-2. Head to `parse.py` and add your declared custom fields under the `CUSTOM_FIELDS` dict 
+```python
+
+class TaskDetails(FetcherDetails):
+    """Task List schema."""
+
+    # could be holidays
+    projectId: Optional[str]
+    resources: List[str]
+    start: datetime.datetime
+    end: datetime.datetime
+    utilizationPercent: Optional[float]
+
+    # Define here your custom fields
+    my_custom_pydantic_name: Optional[str]
+```
+2. Head to `config/config.yaml` and add your declared custom fields under the dict 
    for the relevant fetcher (task, project or resource) and type (number, date, listvalue, user or text)
 
-```python
-CUSTOM_FIELDS = {
-    'task' : {
-        # define pairs of name in the dict, one for the pydantic and one for the ganttic name
-        'listValues' : {'my_ganttic_custom_name':¡'my_pydantic_name'},
-        'numbers': {},
-        'dates': {},
-    },
-    'resource' : {
-        'listValues' : {},
-        'numbers': {},
-        'dates': {},
-    },
-    'project' : {
-        'listValues' : {},
-        'numbers': {},
-        'dates': {},
-    },
-}
+```yaml
+custom_fields:
+  tasks:
+    listValues:
+       my_custom_ganttic_name: my_pydnatic_name
+    numbers:
+    dates:
+  projects:
+    listValues:
+    numbers:
+    dates:
+  resources:
+    listValues:
+    numbers:
+    dates:
 ```
 
 !!! tip
     Make sure to pass as dictionaries the pairs ganttic names vs pydantic names in 
-the apropriate order.
+    the appropriate order.
 
 
 ## TODOs
