@@ -35,18 +35,18 @@ one_resource = Client.get_resource_details(resourceId=r_id)
     2. The client returns pydantic models, where only the relevant data to our usecase has been kept.
 
 !!! warning
-    The library has some limitations
-
-    Mostly that with ill formatted ganttic tasks, (a.k.a.) earlier than 2021, *it might not work*.
+    The library has some limitations, mostly that the Error handling is not great for illformatted tasks
 
 # Extending the client
 
 Say you want to extend the client to your needs. There are some simple steps to follow.
 
 1. Head to `/driganttic/fetcher.py` and edit the relevant [pydantic models](https://pydantic-docs.helpmanual.io/) to your needs. You can add there data validation, data types and optional types.
-2. Head to `/driganttic/parse.py` and edit the relevant functions `_refine_Xdetails` (with `X` being project, task or resource) to parse your relevant fields of interest defined earlier.
+2. Head to `/driganttic/parse.py` and edit the `CUSTOM_FIELDS` dictionary with your speciffic custom data types.
 3. Head to `/driganttic/tests/` and add the relevant tests for the defined data fields.
 
 !!! tip
     Make sure to use the auxiliary functions `parse_timestamp` and `get_Y` (with `Y` being category, number or date) to handle the custom defined datafields.
- 
+
+!!! warning
+    Custom `text` and `userfields` are currently not supported.

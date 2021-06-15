@@ -19,33 +19,6 @@ class ErrorMessage(str, Enum):
 # Enums
 
 
-class ServiceEnum(str, Enum):
-    """Service Enum."""
-
-    projecte = "Projecte"
-    manteniment = "Manteniment"
-    intern = "Intern"
-    discovery = "Discovery"
-    peed = "PEED"
-
-
-class RoleEnum(str, Enum):
-    """Role Enum."""
-
-    soci = "Soci"
-    bd = "BD"
-    lds = "LDS"
-    ds = "DS"
-
-
-class ScenarioEnum(str, Enum):
-    """Scenario Enum."""
-
-    esperat = "Esperat"
-    optimista = "Optimista"
-    congelat = "Congelat"
-    confirmat = "Confirmat"
-
 
 class FetcherDetails(Base):
     """Fetcher Details schema.
@@ -72,8 +45,8 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    capacity: float
-    role: RoleEnum
+    # Define here your custom fields
+
 
 
 class TaskDetails(FetcherDetails):
@@ -85,19 +58,14 @@ class TaskDetails(FetcherDetails):
     start: datetime.datetime
     end: datetime.datetime
     utilizationPercent: Optional[float]
-    isBillable: Optional[bool]
+
+    # Define here your custom fields
 
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
-    dateAproxStart: Optional[datetime.datetime]
-    team: Optional[float]
-    discount: Optional[float]
-    probability: Optional[float]
-    service: ServiceEnum
-    scenario: ScenarioEnum
-    sprints: Optional[float]
+    # Define here your custom fields
 
 
 class DataFieldsEnum(str, Enum):
