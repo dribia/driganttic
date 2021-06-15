@@ -84,7 +84,7 @@ class DataFields(Base):
 
 
 class ResourceList(FetcherList):
-    """Resource List schema."""
+    """Resource List schema def."""
 
     fetched_items: Sequence[ResourceDetails]
 
