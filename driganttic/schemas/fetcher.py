@@ -19,6 +19,34 @@ class ErrorMessage(str, Enum):
 # Enums
 
 
+class ServiceEnum(str, Enum):
+    """Service Enum."""
+
+    projecte = "Projecte"
+    manteniment = "Manteniment"
+    intern = "Intern"
+    discovery = "Discovery"
+    peed = "PEED"
+
+
+class RoleEnum(str, Enum):
+    """Role Enum."""
+
+    soci = "Soci"
+    bd = "BD"
+    lds = "LDS"
+    ds = "DS"
+
+
+class ScenarioEnum(str, Enum):
+    """Scenario Enum."""
+
+    esperat = "Esperat"
+    optimista = "Optimista"
+    congelat = "Congelat"
+    confirmat = "Confirmat"
+
+
 class FetcherDetails(Base):
     """Fetcher Details schema.
 
@@ -44,7 +72,8 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    # Define here your custom fields
+    capacity: float
+    role: RoleEnum
 
 
 class TaskDetails(FetcherDetails):
@@ -56,14 +85,19 @@ class TaskDetails(FetcherDetails):
     start: datetime.datetime
     end: datetime.datetime
     utilizationPercent: Optional[float]
-
-    # Define here your custom fields
+    isBillable: Optional[bool]
 
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
-    # Define here your custom fields
+    dateAproxStart: Optional[datetime.datetime]
+    team: Optional[float]
+    discount: Optional[float]
+    probability: Optional[float]
+    service: ServiceEnum
+    scenario: ScenarioEnum
+    sprints: Optional[float]
 
 
 class DataFieldsEnum(str, Enum):
@@ -84,7 +118,7 @@ class DataFields(Base):
 
 
 class ResourceList(FetcherList):
-    """Resource List schema def."""
+    """Resource List schema."""
 
     fetched_items: Sequence[ResourceDetails]
 
