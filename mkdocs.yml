@@ -9,8 +9,8 @@ theme:
   favicon: img/dribia-favicon-120x120.png
   logo: img/logo_dribia_d_blanc.png
 repo_name: dribia_team/driganttic
-repo_url: https://bitbucket.org/dribia_team/driganttic
-edit_uri: ''
+repo_url: https://github.com/Dribia/driganttic
+edit_uri: https://github.com/Dribia/driganttic
 nav:
   - driganttic: index.md
   - Install: install.md
