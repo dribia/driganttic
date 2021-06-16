@@ -9,15 +9,6 @@
 </p>
 
 <p style="text-align: center">
-    <a href="https://bitbucket.org/dribia_team/driganttic/addon/pipelines/home" target="_blank">
-        <img src="https://bitbucket.org/dribia_team/badges/downloads/status_driganttic.svg" alt="Build">
-    </a>
-    <a href="https://bitbucket.org/dribia_team/driganttic/addon/pipelines/home" target="_blank">
-        <img src="https://bitbucket.org/dribia_team/badges/downloads/coverage_driganttic.svg" alt="Coverage">
-    </a>
-    <a href="https://dripy.dribia.dev/packages/" target="_blank">
-        <img src="https://bitbucket.org/dribia_team/badges/downloads/version_driganttic.svg" alt="DriPy">
-    </a>
     <a href="https://github.com/psf/black" target="_blank">
         <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black">
     </a>
