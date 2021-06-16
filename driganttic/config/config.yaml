@@ -12,7 +12,7 @@ custom_fields:
     dates:
   project:
     listValues:
-      tipus: service
+      Tipus: service
       Escenari: scenario
     numbers:
       Equip: team
