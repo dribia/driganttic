@@ -55,7 +55,7 @@ def _fetcherdetails(
         lv = response.get("dataFields", {}).get(k_c, [])
         if lv:
             for k, v in v_c.items():
-                val2 = GET_FIELDS[k_c](lv, k, Translator.listValues)
+                val2 = GET_FIELDS[k_c](lv, k, Translator.__getattribute__(k_c))
                 if val2 is not None:
                     res[v] = val2
     created = parse_timestamp(response.get("created"))
@@ -237,7 +237,7 @@ def get_number(
         else:
             return None
     else:
-        raise NameError("No such item name in Translator")
+        raise NameError(f"No such item name in Translator: {item_name}")
 
 
 def get_date(
@@ -252,7 +252,7 @@ def get_date(
         else:
             return None
     else:
-        raise NameError("No such item name in Translator")
+        raise NameError(f"No such item name in Translator: {item_name}")
 
 
 def get_category(listitems: List, item_name: str, Translator_field: Dict) -> Any:
@@ -268,7 +268,7 @@ def get_category(listitems: List, item_name: str, Translator_field: Dict) -> Any
         else:
             return None
     else:
-        raise NameError("No such item name in Translator")
+        raise NameError(f"No such item name in Translator: {item_name}")
 
 
 def get_user() -> Any:
