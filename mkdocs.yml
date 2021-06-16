@@ -13,7 +13,6 @@ repo_url: https://github.com/Dribia/driganttic
 edit_uri:
 nav:
   - driganttic: index.md
-  - Install: install.md
   - Usage:
     - usage/howto.md
   - Contribute: contribute.md
