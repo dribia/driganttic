@@ -17,6 +17,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 import datetime
 from typing import Any, Callable, Dict, List, Optional, Union
 
+import os
 import dateparser
 import yaml
 
@@ -33,8 +34,10 @@ from driganttic.schemas.fetcher import (
     TaskList,
 )
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 try:
-    with open("driganttic/config/config.yaml", "r") as f:
+    with open(ROOT_DIR+"/config/config.yaml", "r") as f:
         CUSTOM_FIELDS = yaml.load(f, Loader=yaml.FullLoader).get("custom_fields", {})
 except FileNotFoundError:
     CUSTOM_FIELDS = {}
