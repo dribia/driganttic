@@ -36,6 +36,7 @@ class RoleEnum(str, Enum):
     bd = "BD"
     lds = "LDS"
     ds = "DS"
+    dev = "Dev"
 
 
 class ScenarioEnum(str, Enum):
