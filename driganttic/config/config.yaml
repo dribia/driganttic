@@ -6,7 +6,7 @@ custom_fields:
     dates:
   resource:
     listValues:
-      Categoria: role
+      Categoria: category
     numbers:
       Max dedicació facturable: capacity
     dates:
