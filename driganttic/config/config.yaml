@@ -1,7 +1,7 @@
 custom_fields:
   task:
     listValues:
-      isBillable: isBillable
+      nonBillable: nonBillable
     numbers:
     dates:
   resource:
@@ -13,11 +13,11 @@ custom_fields:
   project:
     listValues:
       Tipus: service
-      Escenari: scenario
+      NoConfirmat: nonConfirmed
     numbers:
-      Equip: team
-      Probabilitat: probability
       Sprints: sprints
-      Descompte: discount
+      Lead (%): lds_percent
+      Dev (%): dev_percent
+      AccMan (%): accman_percent
     dates:
       Data aproximada d'inici: dateAproxStart

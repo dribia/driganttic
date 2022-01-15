@@ -6,6 +6,7 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence
+from pydantic import confloat, conint
 
 from driganttic.schemas.base import Base
 
@@ -32,20 +33,10 @@ class ServiceEnum(str, Enum):
 class RoleEnum(str, Enum):
     """Role Enum."""
 
-    soci = "Soci"
-    bd = "BD"
-    lds = "LDS"
+    mds = "MDS"
+    sds = "SDS"
     ds = "DS"
-    dev = "Dev"
-
-
-class ScenarioEnum(str, Enum):
-    """Scenario Enum."""
-
-    esperat = "Esperat"
-    optimista = "Optimista"
-    congelat = "Congelat"
-    confirmat = "Confirmat"
+    jds = "JDS"
 
 
 class FetcherDetails(Base):
@@ -73,7 +64,7 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    capacity: float
+    capacity: confloat(ge=0, le=100)
     role: RoleEnum
 
 
@@ -85,20 +76,20 @@ class TaskDetails(FetcherDetails):
     resources: List[str]
     start: datetime.datetime
     end: datetime.datetime
-    utilizationPercent: Optional[float]
-    isBillable: Optional[bool]
+    utilizationPercent: Optional[confloat(ge=0, le=100)]
+    nonBillable: bool = False
 
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
     dateAproxStart: Optional[datetime.datetime]
-    team: Optional[float]
-    discount: Optional[float]
-    probability: Optional[float]
+    nonConfirmed: bool = False
     service: ServiceEnum
-    scenario: ScenarioEnum
-    sprints: Optional[float]
+    sprints: Optional[conint(gt=0)]
+    lds_percent: Optional[confloat(ge=0, le=100)]
+    dev_percent: Optional[confloat(ge=0, le=100)]
+    accman_percent: Optional[confloat(ge=0, le=100)]
 
 
 class DataFieldsEnum(str, Enum):
