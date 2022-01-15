@@ -30,8 +30,8 @@ class ServiceEnum(str, Enum):
     peed = "PEED"
 
 
-class RoleEnum(str, Enum):
-    """Role Enum."""
+class CategoryEnum(str, Enum):
+    """Category Enum."""
 
     mds = "MDS"
     sds = "SDS"
@@ -65,7 +65,7 @@ class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
     capacity: confloat(ge=0, le=100)
-    role: RoleEnum
+    category: CategoryEnum
 
 
 class TaskDetails(FetcherDetails):
