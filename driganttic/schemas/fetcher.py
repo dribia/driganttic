@@ -87,9 +87,9 @@ class ProjectDetails(FetcherDetails):
     nonConfirmed: bool = False
     service: ServiceEnum
     sprints: Optional[conint(gt=0)]
-    lds_percent: Optional[confloat(ge=0, le=100)]
-    dev_percent: Optional[confloat(ge=0, le=100)]
-    accman_percent: Optional[confloat(ge=0, le=100)]
+    lds_percent: Optional[confloat(ge=0)]
+    dev_percent: Optional[confloat(ge=0)]
+    accman_percent: Optional[confloat(ge=0)]
 
 
 class DataFieldsEnum(str, Enum):
