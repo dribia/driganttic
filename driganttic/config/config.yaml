@@ -1,7 +1,6 @@
 custom_fields:
   task:
     listValues:
-      nonBillable: nonBillable
     numbers:
     dates:
   resource:
@@ -14,10 +13,6 @@ custom_fields:
     listValues:
       Tipus: service
       NoConfirmat: nonConfirmed
-    numbers:
-      Sprints: sprints
-      Lead (%): lds_percent
-      Dev (%): dev_percent
-      AccMan (%): accman_percent
+      AccMan: accMan
     dates:
       Data aproximada d'inici: dateAproxStart

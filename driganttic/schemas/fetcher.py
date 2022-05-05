@@ -19,6 +19,14 @@ class ErrorMessage(str, Enum):
 
 # Enums
 
+class AccManEnum(str, Enum):
+    """AccMan Enum."""
+
+    carlos = "Carlos"
+    ula = "Ula"
+    pol = "Pol"
+    xavier = "Xavier"
+
 
 class ServiceEnum(str, Enum):
     """Service Enum."""
@@ -77,19 +85,14 @@ class TaskDetails(FetcherDetails):
     start: datetime.datetime
     end: datetime.datetime
     utilizationPercent: Optional[confloat(ge=0, le=100)]
-    nonBillable: bool = False
 
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
-    dateAproxStart: Optional[datetime.datetime]
     nonConfirmed: bool = False
     service: ServiceEnum
-    sprints: Optional[conint(gt=0)]
-    lds_percent: Optional[confloat(ge=0)]
-    dev_percent: Optional[confloat(ge=0)]
-    accman_percent: Optional[confloat(ge=0)]
+    accMan: Optional[AccManEnum]
 
 
 class DataFieldsEnum(str, Enum):
