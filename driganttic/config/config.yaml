@@ -14,5 +14,5 @@ custom_fields:
       Tipus: service
       NoConfirmat: nonConfirmed
       AccMan: accMan
-    dates:
-      Data aproximada d'inici: dateAproxStart
+    numbers:
+      Equip: team

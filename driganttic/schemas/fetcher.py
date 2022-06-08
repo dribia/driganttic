@@ -93,6 +93,7 @@ class ProjectDetails(FetcherDetails):
     nonConfirmed: bool = False
     service: ServiceEnum
     accMan: Optional[AccManEnum]
+    team: Optional[float] = 1.5
 
 
 class DataFieldsEnum(str, Enum):
