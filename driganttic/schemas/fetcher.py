@@ -41,10 +41,10 @@ class ServiceEnum(str, Enum):
 class CategoryEnum(str, Enum):
     """Category Enum."""
 
-    mds = "MDS"
-    sds = "SDS"
-    ds = "DS"
-    jds = "JDS"
+    mds = "d. MDS"
+    sds = "c. SDS"
+    ds = "b. DS"
+    jds = "a. JDS"
 
 
 class FetcherDetails(Base):
