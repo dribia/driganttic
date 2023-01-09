@@ -26,6 +26,11 @@ class AccManEnum(str, Enum):
     ula = "Ula"
     pol = "Pol"
     xavier = "Xavier"
+    jordi = "Jordi"
+    nuria = "Nuria"
+    iribarne = "Iribarne"
+    ausias = "Ausias"
+
 
 
 class ServiceEnum(str, Enum):
