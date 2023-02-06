@@ -57,10 +57,11 @@ def _fetcherdetails(
     for k_c, v_c in custom_fields.get(resource_name, {}).items():
         lv = response.get("dataFields", {}).get(k_c, [])
         if lv:
-            for k, v in v_c.items():
-                val2 = GET_FIELDS[k_c](lv, k, Translator.__getattribute__(k_c))
-                if val2 is not None:
-                    res[v] = val2
+            if v_c is not None:
+                for k, v in v_c.items():
+                    val2 = GET_FIELDS[k_c](lv, k, Translator.__getattribute__(k_c))
+                    if val2 is not None:
+                        res[v] = val2
     created = parse_timestamp(response.get("created"))
     if created is not None:
         res["created"] = created

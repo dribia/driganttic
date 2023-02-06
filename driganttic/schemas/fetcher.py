@@ -52,6 +52,16 @@ class CategoryEnum(str, Enum):
     jds = "a. JDS"
 
 
+class RoleEnum(str, Enum):
+    """Role Enum."""
+
+    sup = "Sup"
+    dev = "Dev"
+    lead = "Lead"
+    accman = "AccMan"
+    mant = "Bossa d'hores Mant"
+
+
 class FetcherDetails(Base):
     """Fetcher Details schema.
 
@@ -90,7 +100,7 @@ class TaskDetails(FetcherDetails):
     start: datetime.datetime
     end: datetime.datetime
     utilizationPercent: Optional[confloat(ge=0, le=100)]
-
+    #role: Optional[RoleEnum] = None
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
@@ -99,6 +109,7 @@ class ProjectDetails(FetcherDetails):
     service: ServiceEnum
     accMan: Optional[AccManEnum]
     team: Optional[float] = 1.5
+    sprints: Optional[float] = None
 
 
 class DataFieldsEnum(str, Enum):

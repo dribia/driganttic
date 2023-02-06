@@ -1,6 +1,7 @@
 custom_fields:
   task:
     listValues:
+      #Rol: role
     numbers:
     dates:
   resource:
@@ -16,3 +17,4 @@ custom_fields:
       AccMan: accMan
     numbers:
       Equip: team
+      Sprints: sprints
