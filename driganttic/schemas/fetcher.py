@@ -60,6 +60,7 @@ class RoleEnum(str, Enum):
     lead = "Lead"
     accman = "AccMan"
     mant = "Bossa d'hores Mant"
+    red = "Reducció Jornada"
 
 
 class FetcherDetails(Base):
