@@ -37,15 +37,19 @@ def test_GantticClient():
     """
     Client = dri_client.GantticClient(APIKEY=APIKEY)
 
-    # for k in driganttic.client.FETCHERS.keys():
-    for k in ["task", "resource", "project"]:
+    for k in Client.FETCHERS.keys():
+        # for k in ["task", "resource", "project"]:
         # test fetcher all
         name2 = f"get_{k}s"
         name4 = f"get_{k}_details"
         if k == "task":
-            t1 = datetime.datetime.strptime("2021-04-01 00:00:00", "%Y-%m-%d %H:%M:%S")
-            t2 = datetime.datetime.strptime("2021-05-01 00:00:00", "%Y-%m-%d %H:%M:%S")
-            val1 = Client._exhaust_pages(k, timeMin=t1, timeMax=t2)
+            t1 = datetime.datetime.now()
+            t2 = datetime.datetime.now() + datetime.timedelta(days=20)
+            val1 = Client._exhaust_pages(
+                k,
+                timeMin=t1.strftime("%Y-%m-%d %H:%M"),
+                timeMax=t2.strftime("%Y-%m-%d %H:%M"),
+            )
         else:
             val1 = Client._exhaust_pages(k)
         pprint.pprint(f"Sample call {k}:\n {val1}")
@@ -56,7 +60,7 @@ def test_GantticClient():
         else:
             val3 = Client.__getattribute__(name2)()
         assert val2 == val3
-        # test one particualr ID
+        # test one particular ID
         resid = val1["items"][0].get("id")
         assert resid is not None
         pprint.pprint(val3.dict())

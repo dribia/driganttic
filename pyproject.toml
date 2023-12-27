@@ -9,22 +9,22 @@ maintainers = [
 ]
 readme = "README.md"
 homepage = "https://docs.dribia.dev/driganttic"
-repository = "https://bitbucket.org/dribia_team/driganttic"
+repository = "https://github.com/dribia/driganttic"
 documentation = "https://docs.dribia.dev/driganttic"
 
 [tool.poetry.dependencies]
-python = "^3.7.1,<4.0"
+python = "^3.8,<4.0"
 importlib-metadata = {version = ">1.0", python = "<3.8"}
 aiohttp = "^3.7.4"
 requests = "^2.25.1"
 python-dotenv = "^0.17.0"
 pydantic = "^1.8.1"
 dateparser = "^1.0.0"
-PyYAML = "^5.4.1"
+pyyaml = "^6.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"
-black = "^20.8b1"
+black = "^23.12.1"
 flake8 = "^3.8.4"
 mypy = "^0.790"
 pytest-cov = "^2.10.1"
@@ -35,9 +35,10 @@ isort = {extras = ["pyproject"], version = "^5.6.4"}
 toml = "^0.10.2"
 coverage-badge = "^1.0.1"
 
-[[tool.poetry.source]]
-name = "driganttic"
-url = "https://dripy.dribia.dev/driganttic"
+#[[tool.poetry.source]]
+#name = "driganttic"
+#url = "https://dripy.dribia.dev/driganttic"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
