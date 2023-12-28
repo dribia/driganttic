@@ -182,17 +182,12 @@ def _datafields(response: Dict) -> DataFields:
     res = response.copy()
     for k, v in res.items():
         if k == "listValues":
-            res[k] = dict(
-                (
-                    vv["name"],
-                    {
-                        vv["id"]: _exhaust_dict(
-                            vv["values"], field_v="value", field_k="id"
-                        )
-                    },
-                )
+            res[k] = {
+                vv["name"]: {
+                    vv["id"]: _exhaust_dict(vv["values"], field_v="value", field_k="id")
+                }
                 for vv in v
-            )
+            }
         else:
             res[k] = _exhaust_dict(v)
     return DataFields(**res)
@@ -200,7 +195,7 @@ def _datafields(response: Dict) -> DataFields:
 
 def _exhaust_dict(vallist: List, field_v="id", field_k="name") -> Dict:
     """Dict exhauster."""
-    return dict((vvv[field_k], vvv[field_v]) for vvv in vallist)
+    return {vvv[field_k]: vvv[field_v] for vvv in vallist}
 
 
 DETAIL_PARSERS: Dict[str, Callable] = {
