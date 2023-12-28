@@ -1,3 +1,5 @@
+# DriGanttic
+
 <p style="text-align: center; padding-bottom: 1rem;">
     <a href="https://dribia.github.io/driganttic/">
         <img 
@@ -45,7 +47,7 @@ API REST [Ganttic](https://www.ganttic.com/helpdesk/api) client for python.
 
 ## Example
 
-The client is very trivial to use. It implement wrappers to the main types of available calls.
+The client is very trivial to use. It implements wrappers to the main types of available calls.
 ```python
 from driganttic import parse as dg_parse
 from driganttic import client as dg_client
