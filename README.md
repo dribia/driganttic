@@ -116,9 +116,11 @@ custom_fields:
     dates:
 ```
 
+
 !!! tip
     Make sure to pass as dictionaries the pairs ganttic names vs pydantic names in 
     the appropriate order.
+
 
 ## License
 
