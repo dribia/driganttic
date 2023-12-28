@@ -3,8 +3,6 @@
 set -e
 set -x
 
-mypy driganttic
-flake8 driganttic tests
-black driganttic tests --check
-isort driganttic tests --check-only
-pydocstyle driganttic
+poetry run black driganttic tests --check
+poetry run ruff driganttic tests
+poetry run mypy driganttic
