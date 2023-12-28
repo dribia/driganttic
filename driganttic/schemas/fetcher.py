@@ -53,15 +53,15 @@ class CategoryEnum(str, Enum):
     jds = "a. JDS"
 
 
-class RoleEnum(str, Enum):
-    """Role Enum."""
-
-    sup = "Sup"
-    dev = "Dev"
-    lead = "Lead"
-    accman = "AccMan"
-    mant = "Bossa d'hores Mant"
-    red = "Reducció Jornada"
+# class RoleEnum(str, Enum):
+#     """Role Enum."""
+#
+#     sup = "Sup"
+#     dev = "Dev"
+#     lead = "Lead"
+#     accman = "AccMan"
+#     mant = "Bossa d'hores Mant"
+#     red = "Reducció Jornada"
 
 
 class FetcherDetails(Base):
@@ -110,7 +110,7 @@ class ProjectDetails(FetcherDetails):
 
     nonConfirmed: bool = False
     service: ServiceEnum
-    # accMan: Optional[AccManEnum] = None
+    # accMan: Optional[AccManEnum]
     team: Optional[float] = 1.5
     sprints: Optional[float] = None
 

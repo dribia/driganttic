@@ -1,7 +1,7 @@
 custom_fields:
   task:
     listValues:
-      #Rol: role
+#    Rol: role
     numbers:
     dates:
   resource:
@@ -14,7 +14,7 @@ custom_fields:
     listValues:
       Tipus: service
       NoConfirmat: nonConfirmed
-      AccMan: accMan
+#      AccMan: accMan
     numbers:
       Equip: team
       Sprints: sprints
