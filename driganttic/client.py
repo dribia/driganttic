@@ -75,7 +75,7 @@ class GantticClient:
             FETCHERS: Fetcher list of options
         """
         self.APIKEY = APIKEY
-        self.ENDPOINT = ENDPOINT + "/" + VERSION
+        self.ENDPOINT = f"{ENDPOINT}/{VERSION}"
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
         self.session = requests.Session()

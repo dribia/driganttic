@@ -1,6 +1,6 @@
 """Ganttic API response parser.
 
-We parse the anttic API responses as Pydantic models.
+We parse the Ganttic API responses as Pydantic models.
 
 Note that the models are custom to Dribia needs, if you need
 to change the custom data fields, you need to change each function.
@@ -215,18 +215,12 @@ LIST_PARSERS: Dict[str, Callable] = {
 }
 
 
-# TODO: Evaluate if a better dependency
-#  can be used on none_type (it's only to define NAT)
-
-
-def parse_timestamp(
-    timeval: Optional[str], none_type=None
-) -> Optional[datetime.datetime]:
+def parse_timestamp(timeval: Optional[str]) -> Optional[datetime.datetime]:
     """Parses timestamps robustly."""
     if timeval is not None:
         return dateparser.parse(timeval)
     else:
-        return none_type
+        return None
 
 
 def get_number(
