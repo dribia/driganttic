@@ -1,44 +1,70 @@
 [tool.poetry]
 name = "driganttic"
-version = "1.1.7"
+version = "1.1.8"
 description = "Ganttic API client"
-license = "Proprietary"
-authors = ["Oleguer Sagarra Pascual <ula@dribia.com>"]
+license = "MIT"
+authors = ["Dribia Data Research <info@dribia.com>"]
 maintainers = [
     "Oleguer Sagarra Pascual <ula@dribia.com>",
 ]
 readme = "README.md"
-homepage = "https://docs.dribia.dev/driganttic"
-repository = "https://github.com/dribia/driganttic"
-documentation = "https://docs.dribia.dev/driganttic"
+homepage = "https://dribia.github.io/driganttic/"
+repository = "https://github.com/Dribia/driganttic"
+documentation = "https://dribia.github.io/driganttic/"
 
 [tool.poetry.dependencies]
 python = "^3.8,<4.0"
+PyYAML = "^6.0"
+pydantic = "^1.8.1"
 importlib-metadata = {version = ">1.0", python = "<3.8"}
 aiohttp = "^3.7.4"
 requests = "^2.25.1"
 python-dotenv = "^0.17.0"
-pydantic = "^1.8.1"
 dateparser = "^1.0.0"
-pyyaml = "^6.0.1"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.1.2"
-black = "^23.12.1"
-flake8 = "^3.8.4"
-mypy = "^0.790"
-pytest-cov = "^2.10.1"
-pydocstyle = "^5.1.1"
-mkdocs = "^1.1.2"
-mkdocs-material = "^6.1.7"
-isort = {extras = ["pyproject"], version = "^5.6.4"}
-toml = "^0.10.2"
+[tool.poetry.group.lint.dependencies]
+pre-commit = "3.5.0"
+black = "23.11.0"
+ruff = "0.1.6"
+mypy = "1.7.1"
+types-PyYAML = "^6.0.12"
+types-requests = "^2.25.11"
+types-dateparser = "^1.1.4.10"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.2"
+pytest-mock = "^3.10.0"
+pytest-cov = "^4.0.0"
 coverage-badge = "^1.0.1"
 
-#[[tool.poetry.source]]
-#name = "driganttic"
-#url = "https://dripy.dribia.dev/driganttic"
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.1.3"
+pydocstyle = "^5.1.1"
 
+
+[tool.ruff]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "D",  # pydocstyle
+]
+ignore = [
+    "E501",  # line too long, handled by black
+]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+strict_optional = false
+ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
