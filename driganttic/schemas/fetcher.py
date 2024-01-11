@@ -21,19 +21,6 @@ class ErrorMessage(str, Enum):
 
 # Enums
 
-# class AccManEnum(str, Enum):
-#     """AccMan Enum."""
-#
-#     carlos = "Carlos"
-#     ula = "Ula"
-#     pol = "Pol"
-#     xavier = "Xavier"
-#     jordi = "Jordi"
-#     nuria = "Nuria"
-#     iribarne = "Iribarne"
-#     ausias = "Ausias"
-
-
 class ServiceEnum(str, Enum):
     """Service Enum."""
 
@@ -110,7 +97,7 @@ class ProjectDetails(FetcherDetails):
 
     nonConfirmed: bool = False
     service: ServiceEnum
-    # accMan: Optional[AccManEnum]
+    # accMan: Optional[str]
     team: Optional[float] = 1.5
     sprints: Optional[float] = None
 
