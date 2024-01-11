@@ -73,14 +73,15 @@ class GantticClient:
             ENDPOINT: Api Endpoint
             VERSION: Api version
             FETCHERS: Fetcher list of options
+            kwargs: Additional arguments
         """
         self.APIKEY = APIKEY
-        self.ENDPOINT = ENDPOINT + "/" + VERSION
+        self.ENDPOINT = f"{ENDPOINT}/{VERSION}"
         self.VERSION = VERSION
         self.FETCHERS = FETCHERS
         self.session = requests.Session()
         # Important: This gets the custom user defined data fields
-        self.Translator = dict((k, self._get_datafields(k)) for k in FETCHERS.keys())
+        self.Translator = {k: self._get_datafields(k) for k in FETCHERS.keys()}
 
     def _get_fetcher(
         self,
@@ -97,6 +98,7 @@ class GantticClient:
                 a resource.
             datafields: Set to True if you want only the custom
                 datafields for a fetcher_name
+            kwargs: Additional arguments to pass to the GET request
 
         Returns: Requests response.
 

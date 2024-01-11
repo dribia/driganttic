@@ -1,6 +1,6 @@
 """Ganttic API response parser.
 
-We parse the anttic API responses as Pydantic models.
+We parse the Ganttic API responses as Pydantic models.
 
 Note that the models are custom to Dribia needs, if you need
 to change the custom data fields, you need to change each function.
@@ -15,9 +15,9 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 
 # External modules
 import datetime
+import os
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import os
 import dateparser
 import yaml
 
@@ -37,7 +37,7 @@ from driganttic.schemas.fetcher import (
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    with open(ROOT_DIR+"/config/config.yaml", "r") as f:
+    with open(ROOT_DIR + "/config/config.yaml", "r") as f:
         CUSTOM_FIELDS = yaml.load(f, Loader=yaml.FullLoader).get("custom_fields", {})
 except FileNotFoundError:
     CUSTOM_FIELDS = {}
@@ -182,17 +182,12 @@ def _datafields(response: Dict) -> DataFields:
     res = response.copy()
     for k, v in res.items():
         if k == "listValues":
-            res[k] = dict(
-                (
-                    vv["name"],
-                    {
-                        vv["id"]: _exhaust_dict(
-                            vv["values"], field_v="value", field_k="id"
-                        )
-                    },
-                )
+            res[k] = {
+                vv["name"]: {
+                    vv["id"]: _exhaust_dict(vv["values"], field_v="value", field_k="id")
+                }
                 for vv in v
-            )
+            }
         else:
             res[k] = _exhaust_dict(v)
     return DataFields(**res)
@@ -200,7 +195,7 @@ def _datafields(response: Dict) -> DataFields:
 
 def _exhaust_dict(vallist: List, field_v="id", field_k="name") -> Dict:
     """Dict exhauster."""
-    return dict((vvv[field_k], vvv[field_v]) for vvv in vallist)
+    return {vvv[field_k]: vvv[field_v] for vvv in vallist}
 
 
 DETAIL_PARSERS: Dict[str, Callable] = {
@@ -215,18 +210,12 @@ LIST_PARSERS: Dict[str, Callable] = {
 }
 
 
-# TODO: Evaluate if a better dependency
-#  can be used on none_type (it's only to define NAT)
-
-
-def parse_timestamp(
-    timeval: Optional[str], none_type=None
-) -> Optional[datetime.datetime]:
+def parse_timestamp(timeval: Optional[str]) -> Optional[datetime.datetime]:
     """Parses timestamps robustly."""
     if timeval is not None:
         return dateparser.parse(timeval)
     else:
-        return none_type
+        return None
 
 
 def get_number(

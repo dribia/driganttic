@@ -6,7 +6,9 @@ Dribia 2021/04/21, Oleguer Sagarra <ula@dribia.com>  # original author
 import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence
-from pydantic import confloat, conint
+
+from pydantic import Field
+from typing_extensions import Annotated
 
 from driganttic.schemas.base import Base
 
@@ -18,19 +20,6 @@ class ErrorMessage(str, Enum):
 
 
 # Enums
-
-class AccManEnum(str, Enum):
-    """AccMan Enum."""
-
-    carlos = "Carlos"
-    ula = "Ula"
-    pol = "Pol"
-    xavier = "Xavier"
-    jordi = "Jordi"
-    nuria = "Nuria"
-    iribarne = "Iribarne"
-    ausias = "Ausias"
-
 
 
 class ServiceEnum(str, Enum):
@@ -52,15 +41,15 @@ class CategoryEnum(str, Enum):
     jds = "a. JDS"
 
 
-class RoleEnum(str, Enum):
-    """Role Enum."""
-
-    sup = "Sup"
-    dev = "Dev"
-    lead = "Lead"
-    accman = "AccMan"
-    mant = "Bossa d'hores Mant"
-    red = "Reducció Jornada"
+# class RoleEnum(str, Enum):
+#     """Role Enum."""
+#
+#     sup = "Sup"
+#     dev = "Dev"
+#     lead = "Lead"
+#     accman = "AccMan"
+#     mant = "Bossa d'hores Mant"
+#     red = "Reducció Jornada"
 
 
 class FetcherDetails(Base):
@@ -88,7 +77,7 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    capacity: confloat(ge=0, le=100)
+    capacity: Annotated[float, Field(strict=True, ge=0, le=100)]
     category: CategoryEnum
 
 
@@ -100,15 +89,16 @@ class TaskDetails(FetcherDetails):
     resources: List[str]
     start: datetime.datetime
     end: datetime.datetime
-    utilizationPercent: Optional[confloat(ge=0, le=100)]
-    #role: Optional[RoleEnum] = None
+    utilizationPercent: Optional[Annotated[float, Field(strict=True, ge=0, le=100)]]
+    # role: Optional[RoleEnum] = None
+
 
 class ProjectDetails(FetcherDetails):
     """Project List schema."""
 
     nonConfirmed: bool = False
     service: ServiceEnum
-    accMan: Optional[AccManEnum]
+    accMan: Optional[str] = None
     team: Optional[float] = 1.5
     sprints: Optional[float] = None
 
