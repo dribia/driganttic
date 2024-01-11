@@ -21,6 +21,7 @@ class ErrorMessage(str, Enum):
 
 # Enums
 
+
 class ServiceEnum(str, Enum):
     """Service Enum."""
 
