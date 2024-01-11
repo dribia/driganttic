@@ -98,7 +98,7 @@ class ProjectDetails(FetcherDetails):
 
     nonConfirmed: bool = False
     service: ServiceEnum
-    # accMan: Optional[str]
+    accMan: Optional[str] = None
     team: Optional[float] = 1.5
     sprints: Optional[float] = None
 
