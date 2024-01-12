@@ -77,7 +77,7 @@ class FetcherList(Base):
 class ResourceDetails(FetcherDetails):
     """Resource List schema."""
 
-    capacity: Annotated[float, Field(strict=True, ge=0, le=100)]
+    capacity: Annotated[float, Field(strict=False, ge=0, le=100)]
     category: CategoryEnum
 
 
